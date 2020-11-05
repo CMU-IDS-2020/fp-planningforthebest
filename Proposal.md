@@ -3,7 +3,9 @@
 **Project URL**: TODO
 
 **Name of project:** Better planning for fatal times 
+
 **Track:** Model Track
+
 **Group Members:** Weiqin Wang, Yifan Song, Seungmyung Lee, Eileen Wang
 
 **Introduction**
