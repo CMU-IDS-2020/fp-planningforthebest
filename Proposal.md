@@ -42,9 +42,6 @@ The application will first ask the user to input the patient’s demographic and
 
 Considerations: We will try to make predictions of patient decisions based on the aggregation of data using methods such as matrix factorization. The predicted set of decisions will then be presented to family and friends (individuals that may play the role of the proxy decision maker) as a possible option for them to make. Such an approach may however incur possible ethical concerns. For example, how might we avoid encoding human bias or misrepresent the minority group? For now, we believe that certain design patterns could alleviate such drawbacks, and we look forward to discussing our approach and challenges in the final writeup. 
 
-In conclusion, for the final output of our application, there are two possible outcomes. However, we may choose to pursue both, or just focus on one type of user (patient or proxy decision maker): 
-- If the patient did fill in their preferences,  the patient will see a summary of their decisions. 
-- If the patient did not fill in their preferences, the decision proxy maker will see predicted decision(s). 
 
 **Scope of the project** 
 
