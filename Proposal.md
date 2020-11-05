@@ -32,7 +32,9 @@ For the first type of user (the patient), there will be no ML inference made for
 **Workflow of 1st type of user: A patient**
 First, the interface will allow users to log in to the system and input relevant demographic and healthcare information. Then, the application will leverage an active learning approach to dynamically sample the most important questions for users to answer based on their responses and specific context. The user goes through and answers all the questions. At the end of the workflow, the app will document and summarize the user’s preferences. 
 
-Background research and considerations: We found that there are existing solutions such as the Advance Directive collecting consent from patients in the below format. However, it is not iterable depending on patient context, and patients may spend a lot of time processing questions that may not be relevant to them. With our solution, we hope to present the most pressing questions to the patient in a prioritized order. 
+Background research and considerations: We found that there are existing solutions such as the Advance Directive collecting consent from patients in the below format. However, it is not iterable depending on patient context, and patients may spend a lot of time processing questions that may not be relevant to them. With our solution, we hope to present the most pressing questions to the patient in a prioritized order.
+
+![fig1.PNG](fig1.PNG)
 
 On the technology front, an example of preference elicitation is the MIT Moral Machine[1]. However, MIT Moral Machine does not show the model inference process, making it challenging for users to trust the inference made by the machine. We hope to seek ways to utilize visualization to share with the patient what the machine interpretation of the learned user's utility functions are, so that humans can trust the application to infer in their best interest. 
 
