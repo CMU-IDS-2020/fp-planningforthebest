@@ -26,8 +26,8 @@ We aim to develop a web-based application with a machine learning-based backend.
 
 1) A patient looking to document their preferences
 
-2) A proxy decision maker looking to consider a predicted decision for the patient. 
-For the first type of user (the patient), there will be no ML inference made for the doctors and Patients’ family. For the second type of user (proxy decision maker), the machine learning model will output predicted decision(s) for their consideration. Of course, the final inference in this case will still be left for the proxy decision maker to do. 
+2) A proxy decision maker looking to consider a EoL decision for the patient. 
+We consider two possible use cases here. 1. Only provide the questions chosen by active learning and the answers given by the patients, but no inference on the model end. Therefore, in this case, the EoL decision inference will fully conducted by the doctors and patients' families. 2. The machine learning model will output predicted decision(s) for their consideration. The ethical concern lies into whether trust machine inference or fully relies on human inference. Of course, the final inference in this case will still be left for the proxy decision maker to do. 
 
 **Workflow of 1st type of user: A patient**
 First, the interface will allow users to log in to the system and input relevant demographic and healthcare information. Then, the application will leverage an active learning approach to dynamically sample the most important questions for users to answer based on their responses and specific context. The user goes through and answers all the questions. At the end of the workflow, the app will document and summarize the user’s preferences. 
