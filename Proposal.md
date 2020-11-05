@@ -29,14 +29,14 @@ We aim to develop a web-based application with a machine learning-based backend.
 2) A proxy decision maker looking to consider a predicted decision for the patient. 
 For the first type of user (the patient), there will be no ML inference made for the doctors and Patients’ family. For the second type of user (proxy decision maker), the machine learning model will output predicted decision(s) for their consideration. Of course, the final inference in this case will still be left for the proxy decision maker to do. 
 
-Workflow of 1st type of user: A patient
+**Workflow of 1st type of user: A patient**
 First, the interface will allow users to log in to the system and input relevant demographic and healthcare information. Then, the application will leverage an active learning approach to dynamically sample the most important questions for users to answer based on their responses and specific context. The user goes through and answers all the questions. At the end of the workflow, the app will document and summarize the user’s preferences. 
 
 Background research and considerations: We found that there are existing solutions such as the Advance Directive collecting consent from patients in the below format. However, it is not iterable depending on patient context, and patients may spend a lot of time processing questions that may not be relevant to them. With our solution, we hope to present the most pressing questions to the patient in a prioritized order. 
 
 On the technology front, an example of preference elicitation is the MIT Moral Machine[1]. However, MIT Moral Machine does not show the model inference process, making it challenging for users to trust the inference made by the machine. We hope to seek ways to utilize visualization to share with the patient what the machine interpretation of the learned user's utility functions are, so that humans can trust the application to infer in their best interest. 
 
-Workflow for 2nd type of user: The proxy decision maker
+**Workflow for 2nd type of user: The proxy decision maker**
 The application will first ask the user to input the patient’s demographic and health information. The user confirms, and the model will output predicted decision(s). We will remind the user that this is only a recommendation, and by no means an option they must consider. 
 
 Considerations: We will try to make predictions of patient decisions based on the aggregation of data using methods such as matrix factorization. The predicted set of decisions will then be presented to family and friends (individuals that may play the role of the proxy decision maker) as a possible option for them to make. Such an approach may however incur possible ethical concerns. For example, how might we avoid encoding human bias or misrepresent the minority group? For now, we believe that certain design patterns could alleviate such drawbacks, and we look forward to discussing our approach and challenges in the final writeup. 
