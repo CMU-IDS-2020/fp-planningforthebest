@@ -79,18 +79,18 @@ def Dynamic_survey(training,labels):
 
         #Add transitivity
         if y_new == "1":
-            a,b = T_Yes(Dynamic_question)
-            a = npi.difference(a, training_data)
-            b = np.ones((1,a.shape[0]))
-            training_data=np.append(training_data,a,axis =0 )
-            labels = np.append(labels,b)
+            que,ans = T_Yes(Dynamic_question)
+            que = npi.difference(que, training_data)
+            ans = np.ones((1,que.shape[0]))
+            training_data=np.append(training_data,que,axis =0 )
+            labels = np.append(labels,ans)
 
         if y_new == "0":
-            a,b = T_No(Dynamic_question)
-            a = npi.difference(a, training_data)
-            b = np.zeros((1,a.shape[0]))
-            training_data=np.append(training_data,a,axis =0 )
-            labels = np.append(labels,b)
+            que,ans = T_No(Dynamic_question)
+            que = npi.difference(que, training_data)
+            ans = np.zeros((1,que.shape[0]))
+            training_data=np.append(training_data,que,axis =0 )
+            labels = np.append(labels,ans)
 
         #remove inferible questions 
         X_pool = npi.difference(X_pool, training_data)
