@@ -45,3 +45,7 @@ if __name__ == "__main__":
     io_loop.start()
     print("server start running on " + str(port))
 
+
+results = Dynamic_survey([],[])
+#Save to CSV
+results.to_csv("Survey_Results.csv", index = False)

@@ -1,6 +1,32 @@
+import numpy as np
+import pandas as pd
+from modAL.models import ActiveLearner
+from modAL.uncertainty import entropy_sampling
+from sklearn.linear_model import LogisticRegression
+import numpy_indexed as npi
+from Survey.Binary_D_Features import *
+from Survey.RF_Feature_Plot import * 
+
 class Core():
     def __init__(self):
-        pass
+        self.X_pool = question_generator()
+
+        #cold start, just dummy variable for the baseline 
+        training = [256,1023]
+        labels=[1,0]
+
+        #convert decial to binary 
+        training = [ np.matrix(list(list('{0:010b}'.format(i)))).astype(int) for i in training]
+
+        self.labels = np.array(labels)
+        self.training_data = np.concatenate( training, axis=0 )
+
+        #learner of active learning
+        self.learner = ActiveLearner(
+            estimator=LogisticRegression(C=1e5, solver='lbfgs'),
+            X_training=self.training_data, y_training=np.array(labels).astype(int)
+        )
+        
 
     def set_websocket(self, websocket):
         self.websocket = websocket
@@ -9,7 +35,22 @@ class Core():
         self.websocket.write_message(response)
 
     def handle_message(self, message):
+
+        self.learner.teach(self.training_data,np.array(self.labels).astype(int))
+        
+        #find query idx and instance 
+        query_idx, query_inst = self.learner.query(self.X_pool)  
+
+        #convert the feature vectors to matrix, eg [1 1] -> [1 0 ]; [0 1]
+        query_inst = multi_2_one(query_inst)
+
+        #find the questions and get resposne 
+        Dynamic_question = tuple([inv_features[str(i)] for i in query_inst])
+
+        #add to the trainning data
+        self.training_data=np.append(self.training_data,self._pool[query_idx],axis =0 )
+
         answer = message.split(',')[0]
-        question_id = int(message.split(',')[1])
         print("The answer of question " + str(question_id) + " is " + answer)
-        self.write_message("Binary question " + str(question_id))
+        
+        self.write_message("Binary question " + str(Dynamic_question))
