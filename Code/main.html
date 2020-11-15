@@ -1,0 +1,221 @@
+<style>
+    @import url(https://fonts.googleapis.com/css?family=Work+Sans:300,600);
+
+    body{
+        font-size: 20px;
+        font-family: 'Work Sans', sans-serif;
+        color: #333;
+      font-weight: 300;
+      text-align: center;
+      background-color: #f8f6f0;
+    }
+    h1{
+      font-weight: 300;
+      margin: 0px;
+      padding: 10px;
+      font-size: 20px;
+      background-color: #444;
+      color: #fff;
+    }
+    .question{
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+    .answers {
+      margin-bottom: 20px;
+      text-align: left;
+      display: inline-block;
+    }
+    .answers label{
+      display: block;
+      margin-bottom: 10px;
+    }
+    button{
+      font-family: 'Work Sans', sans-serif;
+        font-size: 22px;
+        background-color: #279;
+        color: #fff;
+        border: 0px;
+        border-radius: 3px;
+        padding: 20px;
+        cursor: pointer;
+        margin-bottom: 20px;
+    }
+    button:hover{
+        background-color: #38a;
+    }
+    .slide{
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      width: 100%;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+    .active-slide{
+      opacity: 1;
+      z-index: 2;
+    }
+    .survey-container{
+      position: relative;
+      height: 200px;
+      margin-top: 40px;
+    }
+</style>
+
+
+<h1>Demo Survey</h1>
+<div class="survey-container">
+  <div id="survey"></div>
+</div>
+<button id="previous">Previous Question</button>
+<button id="next">Next Question</button>
+<button id="submit">Submit</button>
+<div id="results"></div>
+
+<script>
+(function(){
+  // Functions
+  function buildSurvey(){
+    // variable to store the HTML output
+    const output = [];
+
+    // for each question...
+    myQuestions.forEach(
+      (currentQuestion, questionNumber) => {
+
+        // variable to store the list of possible answers
+        const answers = [];
+
+        // and for each available answer...
+        for(letter in currentQuestion.answers){
+
+          // ...add an HTML radio button
+          answers.push(
+            `<label>
+              <input type="radio" name="question${questionNumber}" value="${letter}">
+              ${currentQuestion.answers[letter]}
+            </label>`
+          );
+        }
+
+        // add this question and its answers to the output
+        output.push(
+          `<div class="slide">
+            <div class="question"> ${currentQuestion.question} </div>
+            <div class="answers"> ${answers.join("")} </div>
+          </div>`
+        );
+      }
+    );
+
+    // finally combine our output list into one string of HTML and put it on the page
+    surveyContainer.innerHTML = output.join('');
+  }
+
+ function showResults(){
+
+  }
+
+  function showSlide(n) {
+    slides[currentSlide].classList.remove('active-slide');
+    slides[n].classList.add('active-slide');
+    currentSlide = n;
+    if(currentSlide === 0){
+      previousButton.style.display = 'none';
+    }
+    else{
+      previousButton.style.display = 'inline-block';
+      previousButton.style.display = 'none';
+    }
+    if(currentSlide === slides.length-1){
+      nextButton.style.display = 'none';
+      submitButton.style.display = 'inline-block';
+    }
+    else{
+      nextButton.style.display = 'inline-block';
+      submitButton.style.display = 'none';
+    }
+  }
+
+  function showNextSlide() {
+    if (myQuestions.length < MAX_QUESTION) {
+      var answerContainers = surveyContainer.querySelectorAll('.answers');
+      var answerContainer = answerContainers[myQuestions.length - 2];
+      var selector = `input[name=question${myQuestions.length - 2}]:checked`;
+      var previousAnswer = (answerContainer.querySelector(selector) || {}).value;
+      var nextQuestion = "";
+
+      ws = new WebSocket("ws://localhost:8888/websocket");
+      ws.onopen = function () {
+        ws.send(previousAnswer + "," + (myQuestions.length - 2));
+        ws.onmessage = function (message) {
+          nextQuestion = message.data;
+          var question = {
+            question: nextQuestion,
+            answers: {
+              yes: "YES",
+              no: "NO",
+              skip: "SKIP"
+            }
+          };
+
+          myQuestions.splice(myQuestions.length - 1, 0, question);
+          buildSurvey();
+          slides = document.querySelectorAll(".slide");
+          showSlide(currentSlide + 1);
+        }
+      }
+    } else {
+      showSlide(currentSlide + 1);
+    }
+  }
+
+  function showPreviousSlide() {
+    showSlide(currentSlide - 1);
+  }
+
+  // Variables
+  const surveyContainer = document.getElementById('survey');
+  const resultsContainer = document.getElementById('results');
+  const submitButton = document.getElementById('submit');
+  const MAX_QUESTION = 5;
+  // Initialize with at least two questions to make the logic work
+  var myQuestions = [
+    {
+      question: "First Question",
+      answers: {
+        yes: "YES",
+        no: "NO",
+        skip: "SKIP"
+      }
+    },
+    {
+      question: "Last Question",
+      answers: {
+        yes: "YES",
+        no: "NO",
+        skip: "SKIP"
+      }
+    }
+  ];
+
+  // Kick things off
+  buildSurvey();
+
+  // Pagination
+  const previousButton = document.getElementById("previous");
+  const nextButton = document.getElementById("next");
+  var slides = document.querySelectorAll(".slide");
+  let currentSlide = 0;
+
+  // Show the first slide
+  showSlide(currentSlide);
+
+  // Event listeners
+  submitButton.addEventListener('click', showResults);
+  previousButton.addEventListener("click", showPreviousSlide);
+  nextButton.addEventListener("click", showNextSlide);
+})();
+</script>
