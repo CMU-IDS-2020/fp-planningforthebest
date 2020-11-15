@@ -51,5 +51,6 @@ def RF_plot(X,Y):
 	result = [features[str(i)] for i in indices]
 	plt.xticks(range(X.shape[1]), result, fontsize=14)
 	plt.xlim([-1, X.shape[1]])
-	plt.savefig('result.jpg')
-	plt.show()
+	plt.savefig('./static/result.jpg')
+	plt.close()
+	# plt.show()

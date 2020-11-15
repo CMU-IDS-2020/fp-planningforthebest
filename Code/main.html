@@ -88,25 +88,33 @@
         // variable to store the list of possible answers
         const answers = [];
 
-        // and for each available answer...
-        for(letter in currentQuestion.answers){
-
-          // ...add an HTML radio button
-          answers.push(
-            `<label>
-              <input type="radio" name="question${questionNumber}" value="${letter}">
-              ${currentQuestion.answers[letter]}
-            </label>`
+        if(currentQuestion.question == "Please enter your name"){
+          output.push(
+            `<div class="slide">
+              <div class="question"> ${currentQuestion.question} </div>
+              <div class="answers"><input type="text" id="name" name="name"><br><br> </div>
+            </div>`
+          );
+        } else if (currentQuestion.question == "Please enter your feedback if there's any") {
+          output.push(
+            `<div class="slide">
+              <div class="question"> ${currentQuestion.question} </div>
+              <div class="answers"><textarea id="feedback" name="feedback" rows="4" cols="50"></textarea><br><br> </div>
+            </div>`
+          );
+        } else {
+          // and for each available answer...
+          for (letter in currentQuestion.answers) {
+            // ...add an HTML radio button
+            answers.push(
+              `<label><input type="radio" name="question${questionNumber}" value="${letter}">${currentQuestion.answers[letter]}</label>`
+            );
+          }
+          // add this question and its answers to the output
+          output.push(
+            `<div class="slide"><div class="question"> ${currentQuestion.question} </div><div class="answers"> ${answers.join("")} </div></div>`
           );
         }
-
-        // add this question and its answers to the output
-        output.push(
-          `<div class="slide">
-            <div class="question"> ${currentQuestion.question} </div>
-            <div class="answers"> ${answers.join("")} </div>
-          </div>`
-        );
       }
     );
 
@@ -114,8 +122,63 @@
     surveyContainer.innerHTML = output.join('');
   }
 
- function showResults(){
+  function showResults(){
+    ws = new WebSocket("ws://localhost:80/websocket");
+    ws.onopen = function () {
+      ws.send("submit");
+      ws.onmessage = function (message) {
 
+        // variable to store the HTML output
+        const output = [];
+
+        // for each question...
+        myQuestions.forEach(
+                (currentQuestion, questionNumber) => {
+
+                  // variable to store the list of possible answers
+                  const answers = [];
+
+                  if (currentQuestion.question == "Please enter your name") {
+                    output.push(
+                            `<div class="slide">
+              <div class="question"> ${currentQuestion.question} </div>
+              <div class="answers"><input type="text" id="name" name="name"><br><br> </div>
+            </div>`
+                    );
+                  } else if (currentQuestion.question == "Please enter your feedback if there's any") {
+                    output.push(
+                            `<div class="slide">
+              <div class="question"> ${currentQuestion.question} </div>
+              <div class="answers"><textarea id="feedback" name="feedback" rows="4" cols="50"></textarea><br><br> </div>
+            </div>`
+                    );
+                  } else {
+                    // and for each available answer...
+                    for (letter in currentQuestion.answers) {
+                      // ...add an HTML radio button
+                      answers.push(
+                              `<label><input type="radio" name="question${questionNumber}" value="${letter}">${currentQuestion.answers[letter]}</label>`
+                      );
+                    }
+                    // add this question and its answers to the output
+                    output.push(
+                            `<div class="slide"><div class="question"> ${currentQuestion.question} </div><div class="answers"> ${answers.join("")} </div></div>`
+                    );
+                  }
+                }
+        );
+        output.push(
+                `<div class="slide">
+              <div class="result"><img src="static/result.jpg"  width="50%"></div>
+            </div>`
+        );
+
+        // finally combine our output list into one string of HTML and put it on the page
+        surveyContainer.innerHTML = output.join('');
+        slides = document.querySelectorAll(".slide");
+        showSlide(currentSlide + 1);
+      }
+    }
   }
 
   function showSlide(n) {
@@ -180,24 +243,14 @@
   const surveyContainer = document.getElementById('survey');
   const resultsContainer = document.getElementById('results');
   const submitButton = document.getElementById('submit');
-  const MAX_QUESTION = 10;
+  const MAX_QUESTION = 5;
   // Initialize with at least two questions to make the logic work
   var myQuestions = [
     {
-      question: "First Question",
-      answers: {
-        yes: "YES",
-        no: "NO",
-        skip: "SKIP"
-      }
+      question: "Please enter your name"
     },
     {
-      question: "Last Question",
-      answers: {
-        yes: "YES",
-        no: "NO",
-        skip: "SKIP"
-      }
+      question: "Please enter your feedback if there's any"
     }
   ];
 

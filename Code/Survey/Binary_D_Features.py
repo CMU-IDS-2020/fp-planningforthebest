@@ -85,7 +85,7 @@ def askQuestion(nodes_list):
 
     out_str_begin = "\n\n\n\nSuppose that if you regained consciousness, you would have \n \n"
     out_str_end = \
-        "\n\nWould you want to receive life-sustaining care?\nEnter 1 to answer Yes \nEnter 0 to answer No\n"
+        "\n\nWould you want to receive life-sustaining care?"
 
     # Add nodes to ask about.
     for i in range(len(nodes_list)):
