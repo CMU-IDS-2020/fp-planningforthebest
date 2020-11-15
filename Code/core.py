@@ -46,11 +46,37 @@ class Core():
 
         #find the questions and get resposne 
         Dynamic_question = tuple([inv_features[str(i)] for i in query_inst])
-
+        question_hold = askQuestion(Dynamic_question)
         #add to the trainning data
-        self.training_data=np.append(self.training_data,self._pool[query_idx],axis =0 )
+        self.training_data=np.append(self.training_data,self.X_pool[query_idx],axis =0 )
 
         answer = message.split(',')[0]
-        print("The answer of question " + str(question_id) + " is " + answer)
+        if answer == "yes":
+            y_new  = "1"
+        else:
+            y_new  = "0"
+        self.labels = np.append(self.labels,int(y_new))
+
+        if y_new == "1":
+            que,ans = T_Yes(Dynamic_question)
+            que = npi.difference(que, self.training_data)
+            ans = np.ones((1,que.shape[0]))
+            self.training_data=np.append(self.training_data,que,axis =0 )
+            self.labels = np.append(self.labels,ans)
+
+        if y_new == "0":
+            que,ans = T_No(Dynamic_question)
+            que = npi.difference(que, self.training_data)
+            ans = np.zeros((1,que.shape[0]))
+            self.training_data=np.append(self.training_data,que,axis =0 )
+            self.labels = np.append(self.labels,ans)
+
+        #remove inferible questions 
+        self.X_pool = npi.difference(self.X_pool, self.training_data)
+
+        print(self.training_data.shape)
+        print(self.labels.shape)
+
+        #print("The answer of question " + str(question_id) + " is " + answer)
         
-        self.write_message("Binary question " + str(Dynamic_question))
+        self.write_message( str(question_hold))

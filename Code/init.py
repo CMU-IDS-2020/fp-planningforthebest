@@ -25,7 +25,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
 
 settings = dict(static_path=os.path.join(os.path.dirname(__file__), "static"))
-port = 8888
+port = 80
 
 if os.name == 'nt':
     import asyncio

@@ -94,14 +94,13 @@ def askQuestion(nodes_list):
 
     # Formatting- make sure we end with a .
     # out_str_begin = out_str_begin[:-1] + '. '
-    out_str_begin = out_str_begin + out_str_end + "Your answer: " 
+    
+    out_str_begin = out_str_begin + out_str_end 
 
-    # Enforce valid input
-    user_input = input(out_str_begin)
-    while user_input not in set([ '0', '1']):
-        user_input = input("\n\n\nInvalid input! Please enter 1, 0." + out_str_begin)
 
-    return user_input
+    
+
+    return  out_str_begin
 
 
 

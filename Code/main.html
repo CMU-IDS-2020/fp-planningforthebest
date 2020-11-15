@@ -147,7 +147,7 @@
       var previousAnswer = (answerContainer.querySelector(selector) || {}).value;
       var nextQuestion = "";
 
-      ws = new WebSocket("ws://localhost:8888/websocket");
+      ws = new WebSocket("ws://localhost:80/websocket");
       ws.onopen = function () {
         ws.send(previousAnswer + "," + (myQuestions.length - 2));
         ws.onmessage = function (message) {
@@ -180,7 +180,7 @@
   const surveyContainer = document.getElementById('survey');
   const resultsContainer = document.getElementById('results');
   const submitButton = document.getElementById('submit');
-  const MAX_QUESTION = 5;
+  const MAX_QUESTION = 10;
   // Initialize with at least two questions to make the logic work
   var myQuestions = [
     {
