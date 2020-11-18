@@ -32,6 +32,7 @@
     }
     button{
       font-family: 'Work Sans', sans-serif;
+        position:relative;
         font-size: 22px;
         background-color: #279;
         color: #fff;
@@ -40,6 +41,7 @@
         padding: 20px;
         cursor: pointer;
         margin-bottom: 20px;
+        z-index: 1024;
     }
     button:hover{
         background-color: #38a;
@@ -95,7 +97,24 @@
               <div class="answers"><input type="text" id="name" name="name"><br><br> </div>
             </div>`
           );
-        } else if (currentQuestion.question == "Please enter your feedback if there's any") {
+        } else if (currentQuestion.question == "Please enter your age"){
+          output.push(
+            `<div class="slide">
+              <div class="question"> ${currentQuestion.question} </div>
+              <div class="answers"><input type="text" id="age" name="age"><br><br> </div>
+            </div>`
+          );
+        } else if (currentQuestion.question == "Please choose your sex"){
+          for (letter in currentQuestion.answers) {
+            answers.push(
+              `<label><input type="radio" name="sex" value="${letter}">${currentQuestion.answers[letter]}</label>`
+            );
+          }
+          output.push(
+            `<div class="slide"><div class="question"> ${currentQuestion.question} </div><div class="answers"> ${answers.join("")} </div></div>`
+          );
+        }
+        else if (currentQuestion.question == "Please enter your feedback if there's any") {
           output.push(
             `<div class="slide">
               <div class="question"> ${currentQuestion.question} </div>
@@ -112,7 +131,7 @@
           }
           // add this question and its answers to the output
           output.push(
-            `<div class="slide"><div class="question"> ${currentQuestion.question} </div><div class="answers"> ${answers.join("")} </div></div>`
+            `<div class="slide"><div class="question"> ${currentQuestion.question} </div><div class="answers"> ${answers.join("")}</div> <img src="static/training${questionNumber-3}.jpg"  width="50%"></img></div>`
           );
         }
       }
@@ -145,7 +164,24 @@
               <div class="answers"><input type="text" id="name" name="name"><br><br> </div>
             </div>`
                     );
-                  } else if (currentQuestion.question == "Please enter your feedback if there's any") {
+                  } else if (currentQuestion.question == "Please enter your age") {
+                    output.push(
+                            `<div class="slide">
+              <div class="question"> ${currentQuestion.question} </div>
+              <div class="answers"><input type="text" id="age" name="age"><br><br> </div>
+            </div>`
+                    );
+                  } 
+                  else if (currentQuestion.question == "Please choose your sex"){
+                    for (letter in currentQuestion.answers) {
+                      answers.push(
+                              `<label><input type="radio" name="sex" value="${letter}">${currentQuestion.answers[letter]}</label>`
+                      );
+                    }
+                    output.push(
+                      `<div class="slide"><div class="question"> ${currentQuestion.question} </div><div class="answers"> ${answers.join("")} </div></div>`
+                    );
+                  }else if (currentQuestion.question == "Please enter your feedback if there's any") {
                     output.push(
                             `<div class="slide">
               <div class="question"> ${currentQuestion.question} </div>
@@ -205,14 +241,14 @@
   function showNextSlide() {
     if (myQuestions.length < MAX_QUESTION) {
       var answerContainers = surveyContainer.querySelectorAll('.answers');
-      var answerContainer = answerContainers[myQuestions.length - 2];
-      var selector = `input[name=question${myQuestions.length - 2}]:checked`;
+      var answerContainer = answerContainers[myQuestions.length - NON_GENERATED_Q];
+      var selector = `input[name=question${myQuestions.length - NON_GENERATED_Q}]:checked`;
       var previousAnswer = (answerContainer.querySelector(selector) || {}).value;
       var nextQuestion = "";
 
       ws = new WebSocket("ws://localhost:80/websocket");
       ws.onopen = function () {
-        ws.send(previousAnswer + "," + (myQuestions.length - 2));
+        ws.send(previousAnswer + "," + (myQuestions.length - NON_GENERATED_Q));
         ws.onmessage = function (message) {
           nextQuestion = message.data;
           var question = {
@@ -233,6 +269,13 @@
     } else {
       showSlide(currentSlide + 1);
     }
+
+    if (question_index >= NON_GENERATED_Q){
+      ws.onopen = function () {
+        ws.send("ALQUESTION", question_index-NON_GENERATED_Q);
+      }
+    }
+    question_index += 1;
   }
 
   function showPreviousSlide() {
@@ -243,16 +286,30 @@
   const surveyContainer = document.getElementById('survey');
   const resultsContainer = document.getElementById('results');
   const submitButton = document.getElementById('submit');
-  const MAX_QUESTION = 5;
+  const MAX_QUESTION = 7;
+  const NON_GENERATED_Q = 4;
+  const question_index = 0;
   // Initialize with at least two questions to make the logic work
   var myQuestions = [
     {
       question: "Please enter your name"
     },
     {
+      question: "Please enter your age"
+    },
+    {
+      question: "Please choose your sex",
+      answers:{
+        male: "Male",
+        female: "Female",
+        none: "Skip"
+      }
+    },
+    {
       question: "Please enter your feedback if there's any"
     }
   ];
+
 
   // Kick things off
   buildSurvey();

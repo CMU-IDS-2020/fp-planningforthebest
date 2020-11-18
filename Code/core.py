@@ -11,6 +11,8 @@ class Core():
     def __init__(self):
         self.X_pool = question_generator()
 
+        self.question_index = 0
+
         #cold start, just dummy variable for the baseline 
         training = [256,1023]
         labels=[1,0]
@@ -35,6 +37,7 @@ class Core():
         self.websocket.write_message(response)
 
     def handle_message(self, message):
+        print(message)
         if message == 'submit':
             RF_plot(self.training_data, self.labels)
             self.write_message("plot generated")
@@ -80,6 +83,10 @@ class Core():
 
             print(self.training_data.shape)
             print(self.labels.shape)
+
+            #RF_plot(self.training_data, self.labels, "training" + str(self.question_index) + ".jpg")
+
+            self.question_index += 1
 
             #print("The answer of question " + str(question_id) + " is " + answer)
 

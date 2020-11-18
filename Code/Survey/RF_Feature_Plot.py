@@ -24,7 +24,7 @@ features = {
 }
 #total = pd.read_csv("Survey_Results.csv")
 #feature importance plot 
-def RF_plot(X,Y):
+def RF_plot(X,Y,outputfile="result.jpg"):
 	#X = np.array(total)[:,:10].astype('int')
 	#Y = np.array(total)[:,10].astype('int')
 	forest = ExtraTreesClassifier(n_estimators=30,
@@ -45,12 +45,12 @@ def RF_plot(X,Y):
 	# Plot the feature importances of the forest
 	plt.figure(figsize=(100, 30), dpi=30)
 
-	plt.title("Relative Feature Importances")
+	plt.title("Relative Feature Importances", fontsize=100)
 	plt.bar(range(X.shape[1]), importances[indices],
 	       color="r", yerr=std[indices], align="center")
 	result = [features[str(i)] for i in indices]
-	plt.xticks(range(X.shape[1]), result, fontsize=14)
+	plt.xticks(range(X.shape[1]), result, fontsize=60)
 	plt.xlim([-1, X.shape[1]])
-	plt.savefig('./static/result.jpg')
+	plt.savefig('./static/'+outputfile)
 	plt.close()
 	# plt.show()
