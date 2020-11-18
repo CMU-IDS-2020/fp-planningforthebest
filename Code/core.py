@@ -35,6 +35,7 @@ class Core():
         self.websocket.write_message(response)
 
     def handle_message(self, message):
+        print(message)
         if message == 'submit':
             RF_plot(self.training_data, self.labels)
             self.write_message("plot generated")
@@ -80,6 +81,11 @@ class Core():
 
             print(self.training_data.shape)
             print(self.labels.shape)
+
+            question_index = message.split(',')[1]
+
+            if int(question_index) > 0:
+                RF_plot(self.training_data, self.labels, "training" + question_index + ".jpg")
 
             #print("The answer of question " + str(question_id) + " is " + answer)
 
