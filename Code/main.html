@@ -40,6 +40,9 @@
         padding: 20px;
         cursor: pointer;
         margin-bottom: 20px;
+        z-index: 1024;
+        position: relative;
+        top: 300px;
     }
     button:hover{
         background-color: #38a;
@@ -112,7 +115,7 @@
           }
           // add this question and its answers to the output
           output.push(
-            `<div class="slide"><div class="question"> ${currentQuestion.question} </div><div class="answers"> ${answers.join("")} </div></div>`
+            `<div class="slide"><div class="question"> ${currentQuestion.question} </div><div class="answers"> ${answers.join("")} </div><div class="results"><img src="static/training${questionNumber-1}.jpg"  width="50%"></img></div></div>`
           );
         }
       }
