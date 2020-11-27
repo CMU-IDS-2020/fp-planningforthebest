@@ -6,6 +6,7 @@ from sklearn.linear_model import LogisticRegression
 import numpy_indexed as npi
 from Survey.Binary_D_Features import *
 from Survey.RF_Feature_Plot import * 
+from db.Database import *
 
 class Core():
     def __init__(self):
@@ -26,6 +27,8 @@ class Core():
             estimator=LogisticRegression(C=1e5, solver='lbfgs'),
             X_training=self.training_data, y_training=np.array(labels).astype(int)
         )
+
+        self.values = list()
         
 
     def set_websocket(self, websocket):
@@ -37,8 +40,12 @@ class Core():
     def handle_message(self, message):
         print(message)
         if message == 'submit':
-            RF_plot(self.training_data, self.labels)
+            importances = RF_plot(self.training_data, self.labels)
+            self.values = self.values + list(importances)
             self.write_message("plot generated")
+            db = Database()
+            db.insertFeatureImportance(self.values)
+            db.closeConnection()
 
         else:
             self.learner.teach(self.training_data,np.array(self.labels).astype(int))
@@ -55,7 +62,12 @@ class Core():
             #add to the trainning data
             self.training_data=np.append(self.training_data,self.X_pool[query_idx],axis =0 )
 
-            answer = message.split(',')[0]
+            answer, question_idx = message.split(',')
+
+            if question_idx == "0":
+                #the answer contains name
+                self.values.append(answer)
+
             if answer == "yes":
                 y_new  = "1"
             else:
@@ -82,10 +94,8 @@ class Core():
             print(self.training_data.shape)
             print(self.labels.shape)
 
-            question_index = message.split(',')[1]
-
-            if int(question_index) > 0:
-                RF_plot(self.training_data, self.labels, "training" + question_index + ".jpg")
+            if int(question_idx) > 0:
+                RF_plot(self.training_data, self.labels, "training" + question_idx + ".jpg")
 
             #print("The answer of question " + str(question_id) + " is " + answer)
 

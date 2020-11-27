@@ -211,6 +211,10 @@
       var answerContainer = answerContainers[myQuestions.length - 2];
       var selector = `input[name=question${myQuestions.length - 2}]:checked`;
       var previousAnswer = (answerContainer.querySelector(selector) || {}).value;
+      if (myQuestions.length-2 == 0){
+        var selector = `input[name=name]`;
+        var previousAnswer = (answerContainer.querySelector(selector) || {}).value;
+      }
       var nextQuestion = "";
 
       ws = new WebSocket("ws://localhost:80/websocket");
