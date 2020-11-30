@@ -34,7 +34,6 @@ header = [  "Paralysis ",
 			 "Sex " ]
 #feature importance plot 
 def RF_Features_Importance(X,Y,outputfile="RF.csv"):
-
 	forest = ExtraTreesClassifier(n_estimators=30,
 	                              random_state=42)
 
@@ -46,7 +45,6 @@ def RF_Features_Importance(X,Y,outputfile="RF.csv"):
                   columns = ["Features","Importance"]) 
 
 	df.to_csv(outputfile,index=False)
-
 #Testing 
 """
 total = pd.read_csv("Survey_Results.csv")

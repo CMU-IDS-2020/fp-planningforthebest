@@ -18,11 +18,12 @@
       color: #fff;
     }
     .question{
-      font-size: 30px;
+      font-size: 20px;
       margin-bottom: 10px;
     }
     .answers {
       margin-bottom: 20px;
+      font-size: 20px;
       text-align: left;
       display: inline-block;
     }
@@ -32,7 +33,7 @@
     }
     button{
       font-family: 'Work Sans', sans-serif;
-        font-size: 22px;
+        font-size: 20px;
         background-color: #279;
         color: #fff;
         border: 0px;
@@ -42,7 +43,7 @@
         margin-bottom: 20px;
         z-index: 1024;
         position: relative;
-        top: 300px;
+        /*top: 300px;*/
     }
     button:hover{
         background-color: #38a;
@@ -62,13 +63,13 @@
     }
     .survey-container{
       position: relative;
-      height: 200px;
+      height: 350px;
       margin-top: 40px;
     }
 </style>
 
 
-<h1>Demo Survey</h1>
+<h1>Better planning for fatal times</h1>
 <div class="survey-container">
   <div id="survey"></div>
 </div>
@@ -76,6 +77,9 @@
 <button id="next">Next Question</button>
 <button id="submit">Submit</button>
 <div id="results"></div>
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
 
 <script>
 (function(){
@@ -114,9 +118,21 @@
             );
           }
           // add this question and its answers to the output
+          var question_arr = currentQuestion.question.split('*');
+          var question_html = question_arr[0] + "\n";
+          console.log(question_arr);
+          console.log(question_html);
+          var i = 1;
+          while(i<question_arr.length-1){
+            question_html  += "<li>" + question_arr[i] + "</li>";
+            i++;
+          }
+          question_html += "\n" + question_arr[question_arr.length-1];
           output.push(
-            `<div class="slide"><div class="question"> ${currentQuestion.question} </div><div class="answers"> ${answers.join("")} </div><div class="results"><img src="static/training${questionNumber-1}.jpg"  width="50%"></img></div></div>`
+            `<div class="slide"><div class="question"> ${question_html} </div><div class="answers"> ${answers.join("")} </div>
+             <div class="graph"></div></div>`
           );
+
         }
       }
     );
@@ -222,8 +238,7 @@
             question: nextQuestion,
             answers: {
               yes: "YES",
-              no: "NO",
-              skip: "SKIP"
+              no: "NO"
             }
           };
 
@@ -231,10 +246,22 @@
           buildSurvey();
           slides = document.querySelectorAll(".slide");
           showSlide(currentSlide + 1);
+          if(currentSlide > 0){
+            // Initialize plot
+            var questionIdx = currentSlide - 1;
+            console.log(questionIdx);
+            generate_graph('static/training' + questionIdx + '.csv');
+          }
         }
       }
     } else {
       showSlide(currentSlide + 1);
+      if(currentSlide < MAX_QUESTION-1){
+        // Initialize plot
+        var questionIdx = currentSlide - 1;
+        console.log(questionIdx);
+        generate_graph('static/training' + questionIdx + '.csv');
+      }
     }
   }
 
@@ -246,7 +273,7 @@
   const surveyContainer = document.getElementById('survey');
   const resultsContainer = document.getElementById('results');
   const submitButton = document.getElementById('submit');
-  const MAX_QUESTION = 5;
+  const MAX_QUESTION = 12;
   // Initialize with at least two questions to make the logic work
   var myQuestions = [
     {
@@ -273,5 +300,67 @@
   submitButton.addEventListener('click', showResults);
   previousButton.addEventListener("click", showPreviousSlide);
   nextButton.addEventListener("click", showNextSlide);
+
+  // set the dimensions and margins of the graph
+  margin = {top: 50, right: 30, bottom: 70, left: 60},
+          width = 800 - margin.left - margin.right,
+          height = 300 - margin.top - margin.bottom;
+
+  // append the svg object to the body of the page
+  svg = d3.select("#results")
+          .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform",
+                  "translate(" + margin.left + "," + margin.top + ")");
+
+  // Initialize the X axis
+  x = d3.scaleBand()
+          .range([0, width])
+          .padding(0.2);
+  xAxis = svg.append("g")
+          .attr("transform", "translate(0," + height + ")")
+
+  // Initialize the Y axis
+  y = d3.scaleLinear()
+          .range([height, 0]);
+  yAxis = svg.append("g")
+          .attr("class", "myYaxis")
 })();
+</script>
+
+<script>
+
+function generate_graph(filename) {
+  d3.csv(filename, function(data) {
+
+    // X axis
+    x.domain(data.map(function(d) { return d.Features; }))
+    xAxis.transition().duration(1000).call(d3.axisBottom(x))
+
+    // Add Y axis
+    y.domain([0, d3.max(data, function(d) { return +d['Importance'] }) ]);
+    yAxis.transition().duration(1000).call(d3.axisLeft(y));
+
+    // variable u: map data to existing bars
+    var u = svg.selectAll("rect")
+      .data(data)
+
+    // update bars
+    u
+      .enter()
+      .append("rect")
+      .merge(u)
+      .transition()
+      .duration(1000)
+        .attr("x", function(d) { return x(d.Features); })
+        .attr("y", function(d) { return y(d['Importance']); })
+        .attr("width", x.bandwidth())
+        .attr("height", function(d) { return height - y(d['Importance']); })
+        .attr("fill", "#69b3a2")
+  })
+}
+
+
 </script>
