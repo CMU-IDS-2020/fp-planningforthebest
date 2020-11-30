@@ -22,15 +22,16 @@ features = {
 "8": "Emotions ",
 "9" : "Sex " ,
 }
-header = [  "Paralysis ", "Voice ",
-"Feeding_Tube " ,
- "Vision ",
-"Cognitive " ,
-"Perception " ,
-"Dressing " ,
-"Incontinence " ,
-"Emotions ",
- "Sex " ]
+header = [  "Paralysis ", 
+			"Voice ",
+			"Feeding_Tube " ,
+			 "Vision ",
+			"Cognitive " ,
+			"Perception " ,
+			"Dressing " ,
+			"Incontinence " ,
+			"Emotions ",
+			 "Sex " ]
 #feature importance plot 
 def RF_Features_Importance(X,Y,outputfile="RF.csv"):
 
@@ -38,12 +39,18 @@ def RF_Features_Importance(X,Y,outputfile="RF.csv"):
 	                              random_state=42)
 
 	forest.fit(X, Y)
-	importances = np.matrix(forest.feature_importances_)
-	print(importances.sum(axis = 1))
-	std = np.std([tree.feature_importances_ for tree in forest.estimators_],
-	             axis=0)
-	df = pd.DataFrame(data = importances,  
-                  index = ["ROW1"],
-                  columns = header) 
+	importances = np.matrix(forest.feature_importances_).tolist()[0]
+
+	df = pd.DataFrame(list(zip(header,importances)),
+             
+                  columns = ["Features","Importance"]) 
 
 	df.to_csv(outputfile,index=False)
+
+#Testing 
+"""
+total = pd.read_csv("Survey_Results.csv")
+X = total.iloc[:,:10]
+Y = total.iloc[:,10]
+RF_Features_Importance(X,Y)
+"""
