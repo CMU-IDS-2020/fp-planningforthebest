@@ -32,13 +32,14 @@ header = [  "Paralysis ", "Voice ",
 "Emotions ",
  "Sex " ]
 #feature importance plot 
-def RF_plot(X,Y,outputfile="RF.csv"):
+def RF_Features_Importance(X,Y,outputfile="RF.csv"):
 
 	forest = ExtraTreesClassifier(n_estimators=30,
 	                              random_state=42)
 
 	forest.fit(X, Y)
 	importances = np.matrix(forest.feature_importances_)
+	print(importances.sum(axis = 1))
 	std = np.std([tree.feature_importances_ for tree in forest.estimators_],
 	             axis=0)
 	df = pd.DataFrame(data = importances,  
@@ -46,9 +47,3 @@ def RF_plot(X,Y,outputfile="RF.csv"):
                   columns = header) 
 
 	df.to_csv(outputfile,index=False)
-'''
-total = pd.read_csv("Survey_Results.csv")
-X = total.iloc[:,:10]
-Y= total.iloc[:,10]
-RF_plot(X,Y)
-'''
