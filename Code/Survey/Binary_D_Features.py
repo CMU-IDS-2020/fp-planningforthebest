@@ -151,18 +151,20 @@ def T_Yes(question):
 
 def eval(model,pool):
     X_test = pool[np.random.choice(pool.shape[0], 10, replace=False)]
+    df = pd.DataFrame(columns=["Question", "Probability","Labels"])
+
     q_hold = []
-    for i in X_test:
-        query_inst = multi_2_one(i)
+    for q in X_test:
+        query_inst = multi_2_one(q)
         Dynamic_question = tuple([inv_features[str(i)] for i in query_inst])
         askQuestion(Dynamic_question)
         q_hold.append(askQuestion(Dynamic_question))
-
-    df = pd.DataFrame(columns=["Question", "Probability","Labels"])
-    labels = model.predict(X_test)
     df["Question"] = q_hold
+
     probability = model.predict_proba(X_test)[:,1]
     df["Probability"] = probability
+
+    labels = model.predict(X_test)
     df["Labels"] = labels
 
     return df 
