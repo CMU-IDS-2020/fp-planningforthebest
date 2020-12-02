@@ -49,6 +49,7 @@ def RF_plot(X,Y,outputfile="result.jpg"):
 	plt.bar(range(X.shape[1]), importances[indices],
 	       color="r", yerr=std[indices], align="center")
 	result = [features[str(i)] for i in indices]
+	print(importances)
 	plt.xticks(range(X.shape[1]), result, fontsize=60)
 	plt.xlim([-1, X.shape[1]])
 	plt.savefig('./static/'+outputfile)
