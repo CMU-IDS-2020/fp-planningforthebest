@@ -12,7 +12,6 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
   def initialize(self, core):
     self.core = core
     core.set_websocket(self)
-    logging.info('Client IP:' + self.request.remote_ip) 
 
   def open(self):
     print("Web Socket Opened")
