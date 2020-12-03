@@ -4,6 +4,7 @@
 import numpy as np
 from itertools import combinations
 from random import sample, shuffle
+import pandas as pd
 features = {
 "One sided body paralysis " : np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0]), # partial body paralysis
 "Impaired voice, unable to speak coherent words " : np.array([0, 1, 0, 0, 0, 0, 0, 0, 0, 0]),
@@ -83,13 +84,13 @@ def askQuestion(nodes_list):
     :return: the value (1 for yes, 0 for no)
     """
 
-    out_str_begin = "\n\n\n\nSuppose that if you regained consciousness, you would have \n \n"
+    out_str_begin = "Suppose that if you regained consciousness, you would have"
     out_str_end = \
-        "\n\nWould you want to receive life-sustaining care?"
+        "*Would you want to receive life-sustaining care?"
 
     # Add nodes to ask about.
     for i in range(len(nodes_list)):
-        out_str_begin = out_str_begin + "*  " + nodes_list[i][0] + nodes_list[i][1:] + "\n"
+        out_str_begin = out_str_begin + "*" + nodes_list[i][0] + nodes_list[i][1:]
 
 
     # Formatting- make sure we end with a .
@@ -147,3 +148,27 @@ def T_Yes(question):
     for q in To_add:
         result.append(sum(features[symptom] for symptom in q).tolist())
     return np.array(result), np.array(responses)
+
+"""
+Model:  learner in the core script 
+pool:  X_pool in the core script (need more dicsussion since X_pool automatically get rid of the transitivity)
+"""
+def eval(model,pool):
+    X_test = pool[np.random.choice(pool.shape[0], 10, replace=False)]
+    df = pd.DataFrame(columns=["Question", "Probability","Labels"])
+
+    q_hold = []
+    for q in X_test:
+        query_inst = multi_2_one(q)
+        Dynamic_question = tuple([inv_features[str(i)] for i in query_inst])
+        askQuestion(Dynamic_question)
+        q_hold.append(askQuestion(Dynamic_question))
+    df["Question"] = q_hold
+
+    probability = model.predict_proba(X_test)[:,1]
+    df["Probability"] = probability
+
+    labels = model.predict(X_test)
+    df["Labels"] = labels
+
+    return df 

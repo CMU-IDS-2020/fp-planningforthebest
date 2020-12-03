@@ -5,8 +5,9 @@ from modAL.uncertainty import entropy_sampling
 from sklearn.linear_model import LogisticRegression
 import numpy_indexed as npi
 from Survey.Binary_D_Features import *
-from Survey.RF_Feature_Plot import * 
-from db.Database import *
+from Survey.RF_Feature_Plot import *
+from Survey.RF_TO_CSV import *
+from db import Database
 
 class Core():
     def __init__(self):
@@ -94,8 +95,11 @@ class Core():
             print(self.training_data.shape)
             print(self.labels.shape)
 
-            if int(question_idx) > 0:
-                RF_plot(self.training_data, self.labels, "training" + question_idx + ".jpg")
+            question_index = message.split(',')[1]
+
+            if int(question_index) > 0:
+                # RF_plot(self.training_data, self.labels, "training" + question_index + ".jpg")
+                RF_Features_Importance(self.training_data, self.labels, "static/training" + question_index + ".csv")
 
             #print("The answer of question " + str(question_id) + " is " + answer)
 
