@@ -8,14 +8,15 @@ from Survey.Binary_D_Features import *
 from Survey.RF_Feature_Plot import *
 from Survey.RF_TO_CSV import *
 from db.Database import *
+from Survey.LR import *
 
 class Core():
     def __init__(self):
         self.X_pool = question_generator()
 
         #cold start, just dummy variable for the baseline 
-        training = [256,1023]
-        labels=[1,0]
+        training = [1023]
+        labels=[0]
 
         #convert decial to binary 
         training = [ np.matrix(list(list('{0:010b}'.format(i)))).astype(int) for i in training]
@@ -25,7 +26,7 @@ class Core():
 
         #learner of active learning
         self.learner = ActiveLearner(
-            estimator=LogisticRegression(C=1e5, solver='lbfgs'),
+            estimator=LogisticRegression(),#LogisticRegression(C=1e5, solver='lbfgs'),
             X_training=self.training_data, y_training=np.array(labels).astype(int)
         )
 

@@ -7,10 +7,11 @@ import numpy as np
 import pandas as pd
 from modAL.models import ActiveLearner
 from modAL.uncertainty import entropy_sampling
-from sklearn.linear_model import LogisticRegression
+#from sklearn.linear_model import LogisticRegression
 import numpy_indexed as npi
 from Binary_D_Features import *
 from RF_Feature_Plot import * 
+from LR import *
 
 
 def Dynamic_survey(training,labels):
@@ -27,8 +28,8 @@ def Dynamic_survey(training,labels):
 
 
     #cold start, just dummy variable for the baseline 
-    training = [256,1023]
-    labels=[1,0]
+    training = [1023]
+    labels=[0]
 
     #convert decial to binary 
     training = [ np.matrix(list(list('{0:010b}'.format(i)))).astype(int) for i in training]
@@ -38,13 +39,15 @@ def Dynamic_survey(training,labels):
 
     #learner of active learning
     learner = ActiveLearner(
-        estimator=LogisticRegression(C=1e5, solver='lbfgs'),
+        estimator=LogisticRegression(), #LogisticRegression(C=1e5, solver='lbfgs'),
         X_training=training_data, y_training=np.array(labels).astype(int)
     )
 
 
     #saves the directresult 
-    returnhold = [] 
+    #returnhold = [] 
+    #hold  = X_pool[1:3,:]
+    #print(eval(learner, X_pool))
 
     for q in range(30):
 
@@ -53,7 +56,8 @@ def Dynamic_survey(training,labels):
 
         #find query idx and instance 
         query_idx, query_inst = learner.query(X_pool)  
-
+        print(query_idx,query_inst)
+        '''
         #remove the sampled data from data pool     
         #X_pool= X_pool[np.setdiff1d(np.arange(X_pool.shape[0]),query_idx)]
 
@@ -97,11 +101,12 @@ def Dynamic_survey(training,labels):
         if X_pool.shape[0] == 0:
             print("You answered %d question, we are done"% q)
             break 
-
+        '''
     panda_df = pd.DataFrame(data =returnhold,  columns = columns) 
     RF_plot(training_data, labels)
+    
     return panda_df
-
+    
 
 results = Dynamic_survey([],[])
 #Save to CSV
