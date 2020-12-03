@@ -45,12 +45,13 @@ class Core():
             feedback = message[message.index(",")+1:]
             importances = RF_plot(self.training_data, self.labels)
             self.write_message("plot generated")
-            db = Database()
-            db.insertFeatureImportance([self.values.get("user_name")]+list(importances))
-            db.insertFeedback([self.values.get("user_name"), feedback])
-            print(self.answers)
-            db.insertAnswers([self.values.get("user_name")]+self.answers)
-            db.closeConnection()
+
+            #disabling db connection for local testing
+            # db = Database()
+            # db.insertFeatureImportance([self.values.get("user_name")]+list(importances))
+            # db.insertFeedback([self.values.get("user_name"), feedback])
+            # db.insertAnswers([self.values.get("user_name")]+self.answers)
+            # db.closeConnection()
 
         else:
             self.learner.teach(self.training_data,np.array(self.labels).astype(int))
