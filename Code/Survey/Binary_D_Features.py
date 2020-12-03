@@ -116,6 +116,10 @@ def multi_2_one(vector):
     one_hot_targets  = one_hot_targets.astype(int)
     return one_hot_targets
 
+
+def flatten_targets_to_string(matrix):
+    return "".join([str(x) for x in np.sum(matrix, axis=0)])
+
 def T_No(question):
     """
     Function to encode transitivty of No
