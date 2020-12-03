@@ -142,9 +142,13 @@
   }
 
   function showResults(){
+    var answerContainers = surveyContainer.querySelectorAll('.answers');
+    var answerContainer = answerContainers[answerContainers.length-1];
+    var selector = `textarea[name=feedback]`;
+    var previousAnswer = (answerContainer.querySelector(selector) || {}).value;
     ws = new WebSocket("ws://localhost:80/websocket");
     ws.onopen = function () {
-      ws.send("submit");
+      ws.send("submit,"+previousAnswer);
       ws.onmessage = function (message) {
 
         // variable to store the HTML output
@@ -227,6 +231,10 @@
       var answerContainer = answerContainers[myQuestions.length - 2];
       var selector = `input[name=question${myQuestions.length - 2}]:checked`;
       var previousAnswer = (answerContainer.querySelector(selector) || {}).value;
+      if (myQuestions.length-2 == 0){
+        var selector = `input[name=name]`;
+        var previousAnswer = (answerContainer.querySelector(selector) || {}).value;
+      }
       var nextQuestion = "";
 
       ws = new WebSocket("ws://localhost:80/websocket");
@@ -255,6 +263,7 @@
         }
       }
     } else {
+
       showSlide(currentSlide + 1);
       if(currentSlide < MAX_QUESTION-1){
         // Initialize plot

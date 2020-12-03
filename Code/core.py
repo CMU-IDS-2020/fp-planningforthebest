@@ -7,6 +7,7 @@ import numpy_indexed as npi
 from Survey.Binary_D_Features import *
 from Survey.RF_Feature_Plot import *
 from Survey.RF_TO_CSV import *
+from db.Database import *
 
 class Core():
     def __init__(self):
@@ -27,6 +28,9 @@ class Core():
             estimator=LogisticRegression(C=1e5, solver='lbfgs'),
             X_training=self.training_data, y_training=np.array(labels).astype(int)
         )
+
+        self.values = dict()
+        self.answers = list()
         
 
     def set_websocket(self, websocket):
@@ -37,9 +41,17 @@ class Core():
 
     def handle_message(self, message):
         print(message)
-        if message == 'submit':
-            RF_plot(self.training_data, self.labels)
+        if message.split(",")[0] == 'submit':
+            feedback = message[message.index(",")+1:]
+            importances = RF_plot(self.training_data, self.labels)
             self.write_message("plot generated")
+
+            #disabling db connection for local testing
+            # db = Database()
+            # db.insertFeatureImportance([self.values.get("user_name")]+list(importances))
+            # db.insertFeedback([self.values.get("user_name"), feedback])
+            # db.insertAnswers([self.values.get("user_name")]+self.answers)
+            # db.closeConnection()
 
         else:
             self.learner.teach(self.training_data,np.array(self.labels).astype(int))
@@ -56,7 +68,12 @@ class Core():
             #add to the trainning data
             self.training_data=np.append(self.training_data,self.X_pool[query_idx],axis =0 )
 
-            answer = message.split(',')[0]
+            answer, question_idx = message.split(',')
+
+            if question_idx == "0":
+                #the answer contains name
+                self.values["user_name"] = answer
+
             if answer == "yes":
                 y_new  = "1"
             else:
@@ -72,10 +89,14 @@ class Core():
 
             if y_new == "0":
                 que,ans = T_No(Dynamic_question)
+                print(flatten_targets_to_string(query_inst))
                 que = npi.difference(que, self.training_data)
                 ans = np.zeros((1,que.shape[0]))
                 self.training_data=np.append(self.training_data,que,axis =0 )
                 self.labels = np.append(self.labels,ans)
+
+            #Store question string and label
+            self.answers.append(flatten_targets_to_string(query_inst)+y_new)
 
             #remove inferible questions
             self.X_pool = npi.difference(self.X_pool, self.training_data)
@@ -83,11 +104,9 @@ class Core():
             print(self.training_data.shape)
             print(self.labels.shape)
 
-            question_index = message.split(',')[1]
-
-            if int(question_index) > 0:
+            if int(question_idx) > 0:
                 # RF_plot(self.training_data, self.labels, "training" + question_index + ".jpg")
-                RF_Features_Importance(self.training_data, self.labels, "static/training" + question_index + ".csv")
+                RF_Features_Importance(self.training_data, self.labels, "static/training" + question_idx + ".csv")
 
             #print("The answer of question " + str(question_id) + " is " + answer)
 
