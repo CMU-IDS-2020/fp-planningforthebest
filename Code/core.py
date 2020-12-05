@@ -1,3 +1,4 @@
+
 import numpy as np
 import pandas as pd
 from modAL.models import ActiveLearner
@@ -14,8 +15,9 @@ class Core():
     def __init__(self):
         self.X_pool = question_generator()
 
-        #cold start, just dummy variable for the baseline 
-        training = [256,1023]
+        #cold start, just dummy variable for the baseline
+
+        training = [0,1023]
         labels=[1,0]
 
         #convert decial to binary 
@@ -41,7 +43,8 @@ class Core():
         self.websocket.write_message(response)
 
     def handle_message(self, message):
-        print(message)
+
+        
         if message.split(",")[0] == 'submit':
             feedback = message[message.index(",")+1:]
             importances = RF_plot(self.training_data, self.labels)
@@ -53,6 +56,7 @@ class Core():
             # db.insertFeedback([self.values.get("user_name"), feedback])
             # db.insertAnswers([self.values.get("user_name")]+self.answers)
             # db.closeConnection()
+
 
         else:
             self.learner.teach(self.training_data,np.array(self.labels).astype(int))
@@ -67,7 +71,7 @@ class Core():
             Dynamic_question = tuple([inv_features[str(i)] for i in query_inst])
             question_hold = askQuestion(Dynamic_question)
             #add to the trainning data
-            self.training_data=np.append(self.training_data,self.X_pool[query_idx],axis =0 )
+            
 
             answer, question_idx = message.split(',')
 
@@ -75,40 +79,43 @@ class Core():
                 #the answer contains name
                 self.values["user_name"] = answer
 
-            if answer == "yes":
-                y_new  = "1"
             else:
-                y_new  = "0"
-            self.labels = np.append(self.labels,int(y_new))
+                self.training_data=np.append(self.training_data,self.X_pool[query_idx],axis =0 )
+                if answer == "yes":
+                    y_new  = "1"
+                else:
+                    y_new  = "0"
+                self.labels = np.append(self.labels,int(y_new))
 
-            if y_new == "1":
-                que,ans = T_Yes(Dynamic_question)
-                que = npi.difference(que, self.training_data)
-                ans = np.ones((1,que.shape[0]))
-                self.training_data=np.append(self.training_data,que,axis =0 )
-                self.labels = np.append(self.labels,ans)
+                if y_new == "1":
+                    que,ans = T_Yes(Dynamic_question)
+                    que = npi.difference(que, self.training_data)
+                    ans = np.ones((1,que.shape[0]))
+                    self.training_data=np.append(self.training_data,que,axis =0 )
+                    self.labels = np.append(self.labels,ans)
 
-            if y_new == "0":
-                que,ans = T_No(Dynamic_question)
-                print(flatten_targets_to_string(query_inst))
-                que = npi.difference(que, self.training_data)
-                ans = np.zeros((1,que.shape[0]))
-                self.training_data=np.append(self.training_data,que,axis =0 )
-                self.labels = np.append(self.labels,ans)
+                if y_new == "0":
+                    que,ans = T_No(Dynamic_question)
+                    print(flatten_targets_to_string(query_inst))
+                    que = npi.difference(que, self.training_data)
+                    ans = np.zeros((1,que.shape[0]))
+                    self.training_data=np.append(self.training_data,que,axis =0 )
+                    self.labels = np.append(self.labels,ans)
 
-            #Store question string and label
-            self.answers.append(flatten_targets_to_string(query_inst)+y_new)
+                #Store question string and label
+                self.answers.append(flatten_targets_to_string(query_inst)+y_new)
 
-            #remove inferible questions
-            self.X_pool = npi.difference(self.X_pool, self.training_data)
+                #remove inferible questions
+                self.X_pool = npi.difference(self.X_pool, self.training_data)
 
-            print(self.training_data.shape)
-            print(self.labels.shape)
+                print(self.training_data.shape)
+                print(self.labels.shape)
 
             if int(question_idx) > 0:
                 # RF_plot(self.training_data, self.labels, "training" + question_index + ".jpg")
                 RF_Features_Importance(self.training_data, self.labels, "static/training" + question_idx + ".csv")
 
             #print("The answer of question " + str(question_id) + " is " + answer)
-
+            print(eval(self.learner,self.X_pool).Question.to_string())
             self.write_message(str(question_hold))
+
