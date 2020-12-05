@@ -116,6 +116,6 @@ class Core():
                 RF_Features_Importance(self.training_data, self.labels, "static/training" + question_idx + ".csv")
 
             #print("The answer of question " + str(question_id) + " is " + answer)
-            print(eval(self.learner,self.X_pool).Question.to_string())
+            #print(eval(self.learner,self.X_pool).Question.to_string())
             self.write_message(str(question_hold))
 
