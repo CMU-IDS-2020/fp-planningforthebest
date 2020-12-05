@@ -163,10 +163,11 @@ def eval(model,pool):
 
     q_hold = []
     for q in X_test:
-        query_inst = multi_2_one(q)
+        query_inst = multi_2_one(q.reshape((1,q.shape[0])))
         Dynamic_question = tuple([inv_features[str(i)] for i in query_inst])
-        askQuestion(Dynamic_question)
+        #askQuestion(Dynamic_question)
         q_hold.append(askQuestion(Dynamic_question))
+
     df["Question"] = q_hold
 
     probability = model.predict_proba(X_test)[:,1]
@@ -174,5 +175,5 @@ def eval(model,pool):
 
     labels = model.predict(X_test)
     df["Labels"] = labels
-
+    #df.to_csv("test.csv",index = False)
     return df 
