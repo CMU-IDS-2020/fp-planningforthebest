@@ -6,6 +6,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.datasets import make_classification
 from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.inspection import permutation_importance
+from sklearn.linear_model import LogisticRegression
+
 '''
 Author Weiqin Wang
 date 07/13/2019  part of script developed during NSF REU CAAR 2019 DICKERSON GROUP
@@ -33,18 +36,31 @@ header = [  "Paralysis ",
 			"Emotions ",
 			 "Sex " ]
 #feature importance plot 
-def RF_Features_Importance(X,Y,outputfile="RF.csv"):
-	forest = ExtraTreesClassifier(n_estimators=30,
-	                              random_state=42)
 
+def RF_Features_Importance(X,Y,outputfile="RF.csv"):
+	forest = ExtraTreesClassifier(n_estimators= 100,
+	                              random_state=42)
 	forest.fit(X, Y)
 	importances = np.matrix(forest.feature_importances_).tolist()[0]
+	df = pd.DataFrame(list(zip(header,importances)),
+             
+                  columns = ["Features","Importance"]) 
+
+	df.to_csv(outputfile,index=False)
+'''
+def RF_Features_Importance(X,Y,outputfile="RF.csv"):
+	model = LogisticRegression(C=1e5, solver='lbfgs').fit(X, Y)
+
+
+	r = permutation_importance(model, X, Y, n_repeats=30 ,random_state=0)
+	print(r)
 
 	df = pd.DataFrame(list(zip(header,importances)),
              
                   columns = ["Features","Importance"]) 
 
 	df.to_csv(outputfile,index=False)
+'''
 #Testing 
 """
 total = pd.read_csv("Survey_Results.csv")
