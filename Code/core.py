@@ -46,8 +46,10 @@ class Core():
         #print(self.training_data)
         if message.split(",")[0] == 'submit':
             feedback = message[message.index(",")+1:]
-            importances = RF_plot(self.training_data, self.labels)
-            self.write_message("plot generated")
+            # importances = RF_plot(self.training_data, self.labels)
+            rst = eval(self.learner, self.X_pool)
+            self.write_message(rst)
+
 
             #disabling db connection for local testing
             # db = Database()
@@ -56,6 +58,9 @@ class Core():
             # db.insertAnswers([self.values.get("user_name")]+self.answers)
             # db.closeConnection()
 
+        elif message.split(",")[0] == 'evaluate':
+            score = message.split(",")[1]
+            print(score)
 
         else:
             self.learner.teach(self.training_data,np.array(self.labels).astype(int))

@@ -85,12 +85,11 @@ def askQuestion(nodes_list):
     """
 
     out_str_begin = "Suppose that if you regained consciousness, you would have"
-    out_str_end = \
-        "*Would you want to receive life-sustaining care?"
+    out_str_end = " *Would you want to receive life-sustaining care?"
 
     # Add nodes to ask about.
     for i in range(len(nodes_list)):
-        out_str_begin = out_str_begin + "*" + nodes_list[i][0] + nodes_list[i][1:]
+        out_str_begin = out_str_begin + " *" + nodes_list[i][0] + nodes_list[i][1:]
 
 
     # Formatting- make sure we end with a .
@@ -175,5 +174,12 @@ def eval(model,pool):
 
     labels = model.predict(X_test)
     df["Labels"] = labels
-    #df.to_csv("test.csv",index = False)
-    return df 
+    rst = ""
+    for index, row in df.iterrows():
+        if row['Labels'] == 1:
+            answer = "YES"
+        else:
+            answer = "NO"
+        rst += row['Question'] + " \tPREDICTION: " + answer
+        rst += "\n"
+    return rst

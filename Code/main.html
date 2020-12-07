@@ -21,6 +21,10 @@
       font-size: 20px;
       margin-bottom: 10px;
     }
+    .prediction{
+      font-size: 16px;
+      text-align: left;
+    }
     .answers {
       margin-bottom: 20px;
       font-size: 20px;
@@ -69,7 +73,7 @@
 </style>
 
 
-<h1>Better planning for fatal times</h1>
+<h1>Better Planning for Fatal Times</h1>
 <div class="survey-container">
   <div id="survey"></div>
 </div>
@@ -102,7 +106,7 @@
               <div class="answers"><input type="text" id="name" name="name"><br><br> </div>
             </div>`
           );
-        } else if (currentQuestion.question == "Please enter your feedback if there's any") {
+        } else if (currentQuestion.question == "Please enter your feedback, e.g. how to improve the survey, is the visualization helpful") {
           output.push(
             `<div class="slide">
               <div class="question"> ${currentQuestion.question} </div>
@@ -120,10 +124,8 @@
           // add this question and its answers to the output
           var question_arr = currentQuestion.question.split('*');
           var question_html = question_arr[0] + "\n";
-          console.log(question_arr);
-          console.log(question_html);
           var i = 1;
-          while(i<question_arr.length-1){
+          while(i < question_arr.length-1){
             question_html  += "<li>" + question_arr[i] + "</li>";
             i++;
           }
@@ -168,7 +170,7 @@
               <div class="answers"><input type="text" id="name" name="name"><br><br> </div>
             </div>`
                     );
-                  } else if (currentQuestion.question == "Please enter your feedback if there's any") {
+                  } else if (currentQuestion.question == "Please enter your feedback, e.g. how to improve the survey, is the visualization helpful") {
                     output.push(
                             `<div class="slide">
               <div class="question"> ${currentQuestion.question} </div>
@@ -190,18 +192,48 @@
                   }
                 }
         );
+
+        var predictions_html = "<ol>";
+
+        var rst = message.data;
+        // console.log(rst);
+        var predictions_arr = rst.split('\n');
+        var i = 0;
+        while(i < predictions_arr.length-1){
+          var question_answer = predictions_arr[i].split('\t');
+          predictions_html += "<li>" + question_answer[0] ;
+          predictions_html += "<dd>" + question_answer[1] + "</dd>"+ "</li>";
+          i++;
+        }
+        predictions_html += "</ol>";
+
+        var evaluation = "<p>How many predictions do you agree with: <input id = 'score' name='score' type='text' size='10' >%</p>";
+        // console.log(predictions_html);
         output.push(
                 `<div class="slide">
-              <div class="result"><img src="static/result.jpg"  width="50%"></div>
+              <div class="prediction">${predictions_html}</div>
+              <p>How many predictions do you agree with: <input id = 'score' name='score' type='text' size='6' >%</p>
+              <button id="evaluate">Submit</button>
             </div>`
         );
 
         // finally combine our output list into one string of HTML and put it on the page
         surveyContainer.innerHTML = output.join('');
         slides = document.querySelectorAll(".slide");
+        resultsContainer.style.display = 'none';
+        prediction_slide = true;
         showSlide(currentSlide + 1);
       }
     }
+  }
+
+  function evaluate(){
+    ws = new WebSocket("ws://localhost:80/websocket");
+    var answer = document.getElementById('score').value;
+    ws.onopen = function () {
+      ws.send("evluate," + answer);
+    }
+    evalButton.style.display = 'none';
   }
 
   function showSlide(n) {
@@ -222,6 +254,11 @@
     else{
       nextButton.style.display = 'inline-block';
       submitButton.style.display = 'none';
+    }
+    if(prediction_slide){
+      submitButton.style.display = 'none';
+      evalButton = document.getElementById('evaluate');
+      evalButton.addEventListener('click', evaluate);
     }
   }
 
@@ -257,7 +294,7 @@
           if(currentSlide > 0){
             // Initialize plot
             var questionIdx = currentSlide - 1;
-            console.log(questionIdx);
+            // console.log(questionIdx);
             generate_graph('static/training' + questionIdx + '.csv');
           }
         }
@@ -265,11 +302,13 @@
     } else {
 
       showSlide(currentSlide + 1);
-      if(currentSlide < MAX_QUESTION-1){
+      if(currentSlide < MAX_QUESTION){
         // Initialize plot
         var questionIdx = currentSlide - 1;
-        console.log(questionIdx);
+        // console.log(questionIdx);
         generate_graph('static/training' + questionIdx + '.csv');
+      } else {
+        resultsContainer.style.display = 'none';
       }
     }
   }
@@ -282,6 +321,7 @@
   const surveyContainer = document.getElementById('survey');
   const resultsContainer = document.getElementById('results');
   const submitButton = document.getElementById('submit');
+  let prediction_slide = false;
   const MAX_QUESTION = 12;
   // Initialize with at least two questions to make the logic work
   var myQuestions = [
@@ -289,7 +329,7 @@
       question: "Please enter your name"
     },
     {
-      question: "Please enter your feedback if there's any"
+      question: "Please enter your feedback, e.g. how to improve the survey, is the visualization helpful"
     }
   ];
 
