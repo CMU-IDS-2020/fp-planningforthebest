@@ -157,7 +157,11 @@ Model:  learner in the core script
 pool:  X_pool in the core script (need more dicsussion since X_pool automatically get rid of the transitivity)
 """
 def eval(model,pool):
-    X_test = pool[np.random.choice(pool.shape[0], 10, replace=False)]
+    if pool.shape[0] < 10:
+        X_test = pool
+    else:
+        X_test = pool[np.random.choice(pool.shape[0], 10, replace=False)]
+
     df = pd.DataFrame(columns=["Question", "Probability","Labels"])
 
     q_hold = []

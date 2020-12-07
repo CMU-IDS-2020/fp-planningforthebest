@@ -28,7 +28,7 @@ class Core():
         self.start_hold = None 
         #learner of active learning
         self.learner = ActiveLearner(
-            estimator=RandomForestClassifier(),#LogisticRegression(C=1e5, solver='lbfgs'), #LogisticRegression(),
+            estimator=RandomForestClassifier(n_estimators= 300),#LogisticRegression(C=1e5, solver='lbfgs'), #LogisticRegression(),
             X_training=self.training_data, y_training=np.array(labels).astype(int)
         )
 

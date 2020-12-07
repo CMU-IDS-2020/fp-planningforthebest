@@ -8,6 +8,7 @@ from sklearn.datasets import make_classification
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.inspection import permutation_importance
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 
 '''
 Author Weiqin Wang
@@ -38,8 +39,7 @@ header = [  "Paralysis ",
 #feature importance plot 
 
 def RF_Features_Importance(X,Y,outputfile="RF.csv"):
-	forest = ExtraTreesClassifier(n_estimators= 100,
-	                              random_state=42)
+	forest = RandomForestClassifier(n_estimators= 300)
 	forest.fit(X, Y)
 	importances = np.matrix(forest.feature_importances_).tolist()[0]
 	df = pd.DataFrame(list(zip(header,importances)),
