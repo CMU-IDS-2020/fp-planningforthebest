@@ -24,7 +24,8 @@ class Core():
 
         self.labels = np.array(labels)
         self.training_data = np.concatenate( training, axis=0 )
-
+        self.start_bool = False 
+        self.start_hold = None 
         #learner of active learning
         self.learner = ActiveLearner(
             estimator=RandomForestClassifier(),#LogisticRegression(C=1e5, solver='lbfgs'), #LogisticRegression(),
@@ -63,11 +64,19 @@ class Core():
             print(score)
 
         else:
-            self.learner.teach(self.training_data,np.array(self.labels).astype(int))
+            if self.start_bool: 
+                query_inst = self.start_hold
+                self.start_bool = False
+            else:
+                self.learner.teach(self.training_data,np.array(self.labels).astype(int))
 
-            #find query idx and instance
-            query_idx, query_inst = self.learner.query(self.X_pool)
+                #find query idx and instance
+                query_idx, query_inst = self.learner.query(self.X_pool)
 
+                self.start_bool = True
+                self.start_hold = query_inst    
+
+            input_hold = query_inst.reshape(self.training_data[0].shape)
 
             #convert the feature vectors to matrix, eg [1 1] -> [1 0 ]; [0 1]
             query_inst = multi_2_one(query_inst)
@@ -85,7 +94,11 @@ class Core():
                 self.values["user_name"] = answer
 
             else:
-                self.training_data=np.append(self.training_data,self.X_pool[query_idx],axis =0 )
+                #input_hold = self.X_pool[query_idx].reshape(self.training_data[0].shape)
+                print(input_hold)
+                #print(self.X_pool[query_idx].reshape())
+                self.training_data=np.append(self.training_data,input_hold,axis =0 )
+                print(self.training_data)
                 
                 if answer == "yes":
                     y_new  = "1"
@@ -115,8 +128,12 @@ class Core():
                 #remove inferible questions
                 self.X_pool = npi.difference(self.X_pool, self.training_data)
 
+                #got the answer move to next question
+                self.start_bool = False
+
                 #print(self.training_data)
                 #print(self.labels)
+    
 
             if int(question_idx) > 0:
                 # RF_plot(self.training_data, self.labels, "training" + question_index + ".jpg")
