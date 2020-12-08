@@ -53,25 +53,25 @@ class Core():
 
 
             #disabling db connection for local testing
-            # importances = pd.read_csv("static/training20.csv")["Importance"].to_list()
-            # try:
-            #     db = Database()
-            #     db.insertFeatureImportance([self.values.get("user_name")]+list(importances))
-            #     db.insertFeedback([self.values.get("user_name"), feedback])
-            #     db.insertAnswers([self.values.get("user_name")]+self.answers)
-            #     db.closeConnection()
-            # except Exception as e: 
-            #     print(e)
+            importances = pd.read_csv("static/training20.csv")["Importance"].to_list()
+            try:
+                db = Database()
+                db.insertFeatureImportance([self.values.get("user_name")]+list(importances))
+                db.insertFeedback([self.values.get("user_name"), feedback])
+                db.insertAnswers([self.values.get("user_name")]+self.answers)
+                db.closeConnection()
+            except Exception as e: 
+                print(e)
 
-        elif message.split(",")[0] == 'evaluate':
+        elif message.split(",")[0] == 'evluate':
             score = message.split(",")[1]
-        #     # print(score)
-        #     try:
-        #         db = Database()
-        #         db.insertEval([self.values.get("user_name"), score])
-        #         db.closeConnection()
-        #     except Exception as e: 
-        #         print(e)
+            # print(score)
+            try:
+                db = Database()
+                db.insertEval([self.values.get("user_name"), score])
+                db.closeConnection()
+            except Exception as e: 
+                print(e)
 
         else:
 
