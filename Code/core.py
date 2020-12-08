@@ -62,7 +62,7 @@ class Core():
 
         elif message.split(",")[0] == 'evaluate':
             score = message.split(",")[1]
-            print(score)
+            # print(score)
 
         else:
 
@@ -71,13 +71,38 @@ class Core():
             if question_idx == "0":
                 #the answer contains name
                 self.values["user_name"] = answer
+                self.X_pool = question_generator()
+
+                # cold start, just dummy variable for the baseline
+
+                training = [0, 1023]
+                labels = [1, 0]
+
+                # convert decial to binary
+                training = [np.matrix(list(list('{0:010b}'.format(i)))).astype(int) for i in training]
+
+                self.labels = np.array(labels)
+                self.training_data = np.concatenate(training, axis=0)
+                self.start_bool = False
+                self.start_hold = None
+                # learner of active learning
+                self.learner = ActiveLearner(
+                    estimator=RandomForestClassifier(n_estimators=300),
+                    # LogisticRegression(C=1e5, solver='lbfgs'), #LogisticRegression(),
+                    X_training=self.training_data, y_training=np.array(labels).astype(int)
+                )
+
+                self.values = dict()
+                self.answers = list()
+                self.input_hold = None
+                self.Dynamic_question = None
 
             else:
                 #input_hold = self.X_pool[query_idx].reshape(self.training_data[0].shape)
                 #print(input_hold)
                 #print(self.X_pool[query_idx].reshape())
                 self.training_data=np.append(self.training_data,self.input_hold,axis =0 )
-                print(self.training_data)
+                # print(self.training_data)
                 
                 if answer == "yes":
                     y_new  = "1"

@@ -84,12 +84,12 @@ def askQuestion(nodes_list):
     :return: the value (1 for yes, 0 for no)
     """
 
-    out_str_begin = "Suppose that if you regained consciousness, you would have"
+    out_str_begin = "Suppose that if you regained consciousness, you would have -  "
     out_str_end = " *Would you want to receive life-sustaining care?"
 
     # Add nodes to ask about.
     for i in range(len(nodes_list)):
-        out_str_begin = out_str_begin + " *" + nodes_list[i][0] + nodes_list[i][1:]
+        out_str_begin = out_str_begin + "*" + nodes_list[i][0] + nodes_list[i][1:] + "; "
 
 
     # Formatting- make sure we end with a .
@@ -184,6 +184,8 @@ def eval(model,pool):
             answer = "YES"
         else:
             answer = "NO"
-        rst += row['Question'] + " \tPREDICTION: " + answer
+        question = row['Question']
+        question = question.replace('*', '')
+        rst += question + " \tYOUR PREDICTED ANSWER: " + answer
         rst += "\n"
     return rst

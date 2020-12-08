@@ -17,7 +17,23 @@
       background-color: #444;
       color: #fff;
     }
+    .special_question{
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
     .question{
+      position: relative;
+      left: 30%;
+      width: 40%;
+      text-align: left;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .introduction{
+      position: relative;
+      left: 25%;
+      width: 50%;
+      text-align: left;
       font-size: 20px;
       margin-bottom: 10px;
     }
@@ -77,8 +93,8 @@
 <div class="survey-container">
   <div id="survey"></div>
 </div>
-<button id="previous">Previous Question</button>
-<button id="next">Next Question</button>
+<button id="start">Start</button>
+<button id="next">Next</button>
 <button id="submit">Submit</button>
 <div id="results"></div>
 
@@ -91,7 +107,19 @@
   function buildSurvey(){
     // variable to store the HTML output
     const output = [];
-
+    var introduction = 'Welcome to our Advance Care Planning (ACP) tool! ' +
+            'The following survey is created to help you proactively plan for any challenging health circumstances you may encounter as a patient. ' +
+            'Our goal is to accurately represent patient’s wishes in moments where they are unable to make conscious decisions themselves, ' +
+            'in the form of a written description for family and medical professionals. ' +
+            'Please answer the following 20 questions to reflect your preferences. ' +
+            'Then, we will show you an 10 additional questions with machine-predicted answers. ' +
+            'These predicted answers are based on your recorded prior preferences. ' +
+            'Let us know whether you agree with the predicted answers in the end, as it can help us refine the accuracy of our algorithms behind this ACP.';
+    output.push(
+          `<div class="slide">
+            <div class="introduction"><b>`+ introduction + `</b></div>
+          </div>`
+            );
     // for each question...
     myQuestions.forEach(
       (currentQuestion, questionNumber) => {
@@ -99,17 +127,17 @@
         // variable to store the list of possible answers
         const answers = [];
 
-        if(currentQuestion.question == "Please enter your name"){
+        if (currentQuestion.question == "Please enter your name") {
           output.push(
             `<div class="slide">
-              <div class="question"> ${currentQuestion.question} </div>
+              <div class="special_question"> ${currentQuestion.question} </div>
               <div class="answers"><input type="text" id="name" name="name"><br><br> </div>
             </div>`
           );
         } else if (currentQuestion.question == "Please enter your feedback, e.g. how to improve the survey, is the visualization helpful") {
           output.push(
             `<div class="slide">
-              <div class="question"> ${currentQuestion.question} </div>
+              <div class="special_question"> ${currentQuestion.question} </div>
               <div class="answers"><textarea id="feedback" name="feedback" rows="4" cols="50"></textarea><br><br> </div>
             </div>`
           );
@@ -155,6 +183,20 @@
 
         // variable to store the HTML output
         const output = [];
+        var introduction = 'Welcome to our Advance Care Planning (ACP) tool! ' +
+                'The following survey is created to help you proactively plan for any challenging health circumstances you may encounter as a patient. ' +
+                'Our goal is to accurately represent patient’s wishes in moments where they are unable to make conscious decisions themselves, ' +
+                'in the form of a written description for family and medical professionals. ' +
+                'Please answer the following 20 questions to reflect your preferences. ' +
+                'Then, we will show you an 10 additional questions with machine-predicted answers. ' +
+                'These predicted answers are based on your recorded prior preferences. ' +
+                'Let us know whether you agree with the predicted answers in the end, as it can help us refine the accuracy of our algorithms behind this ACP.';
+        output.push(
+              `<div class="slide">
+                <div class="introduction"><b>`+ introduction + `</b></div>
+              </div>`
+                );
+
 
         // for each question...
         myQuestions.forEach(
@@ -166,14 +208,14 @@
                   if (currentQuestion.question == "Please enter your name") {
                     output.push(
                             `<div class="slide">
-              <div class="question"> ${currentQuestion.question} </div>
+              <div class="special_question"> ${currentQuestion.question} </div>
               <div class="answers"><input type="text" id="name" name="name"><br><br> </div>
             </div>`
                     );
                   } else if (currentQuestion.question == "Please enter your feedback, e.g. how to improve the survey, is the visualization helpful") {
                     output.push(
                             `<div class="slide">
-              <div class="question"> ${currentQuestion.question} </div>
+              <div class="special_question"> ${currentQuestion.question} </div>
               <div class="answers"><textarea id="feedback" name="feedback" rows="4" cols="50"></textarea><br><br> </div>
             </div>`
                     );
@@ -201,8 +243,8 @@
         var i = 0;
         while(i < predictions_arr.length-1){
           var question_answer = predictions_arr[i].split('\t');
-          predictions_html += "<li>" + question_answer[0] ;
-          predictions_html += "<dd>" + question_answer[1] + "</dd>"+ "</li>";
+          predictions_html += "<li><b>" + question_answer[0] ;
+          predictions_html += "</b><dd>" + question_answer[1] + "</dd>"+ "</li><br>";
           i++;
         }
         predictions_html += "</ol>";
@@ -212,7 +254,7 @@
         output.push(
                 `<div class="slide">
               <div class="prediction">${predictions_html}</div>
-              <p>How many predictions do you agree with: <input id = 'score' name='score' type='text' size='6' >%</p>
+              <p>How many predictions do you agree with: <input id = 'score' name='score' type='text' size='6' > out of 10</p>
               <button id="evaluate">Submit</button>
             </div>`
         );
@@ -241,11 +283,12 @@
     slides[n].classList.add('active-slide');
     currentSlide = n;
     if(currentSlide === 0){
-      previousButton.style.display = 'none';
+      nextButton.style.display = 'none';
+      startButton.style.display = 'inline-block';
     }
     else{
-      previousButton.style.display = 'inline-block';
-      previousButton.style.display = 'none';
+      nextButton.style.display = 'inline-block';
+      startButton.style.display = 'none';
     }
     if(currentSlide === slides.length-1){
       nextButton.style.display = 'none';
@@ -260,6 +303,16 @@
       evalButton = document.getElementById('evaluate');
       evalButton.addEventListener('click', evaluate);
     }
+    if(currentSlide === 0){
+      nextButton.style.display = 'none';
+      startButton.style.display = 'inline-block';
+    }
+  }
+
+  function introduction(){
+    // buildSurvey();
+    // slides = document.querySelectorAll(".slide");
+    showSlide(currentSlide + 1);
   }
 
   function showNextSlide() {
@@ -291,11 +344,11 @@
           buildSurvey();
           slides = document.querySelectorAll(".slide");
           showSlide(currentSlide + 1);
-          if(currentSlide > 0){
+          if(currentSlide > 1){
             // Initialize plot
             var questionIdx = currentSlide - 1;
             // console.log(questionIdx);
-            generate_graph('static/training' + questionIdx + '.csv');
+            generate_graph('static/training' + (questionIdx-1) + '.csv');
           }
         }
       }
@@ -306,23 +359,21 @@
         // Initialize plot
         var questionIdx = currentSlide - 1;
         // console.log(questionIdx);
-        generate_graph('static/training' + questionIdx + '.csv');
+        generate_graph('static/training' + (questionIdx-1) + '.csv');
       } else {
         resultsContainer.style.display = 'none';
       }
     }
   }
 
-  function showPreviousSlide() {
-    showSlide(currentSlide - 1);
-  }
 
   // Variables
   const surveyContainer = document.getElementById('survey');
   const resultsContainer = document.getElementById('results');
   const submitButton = document.getElementById('submit');
+  const startButton = document.getElementById('start');
   let prediction_slide = false;
-  const MAX_QUESTION = 12;
+  const MAX_QUESTION = 22;
   // Initialize with at least two questions to make the logic work
   var myQuestions = [
     {
@@ -337,7 +388,6 @@
   buildSurvey();
 
   // Pagination
-  const previousButton = document.getElementById("previous");
   const nextButton = document.getElementById("next");
   var slides = document.querySelectorAll(".slide");
   let currentSlide = 0;
@@ -347,7 +397,7 @@
 
   // Event listeners
   submitButton.addEventListener('click', showResults);
-  previousButton.addEventListener("click", showPreviousSlide);
+  startButton.addEventListener('click', introduction);
   nextButton.addEventListener("click", showNextSlide);
 
   // set the dimensions and margins of the graph
