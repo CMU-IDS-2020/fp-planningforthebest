@@ -65,13 +65,13 @@ class Core():
 
         elif message.split(",")[0] == 'evaluate':
             score = message.split(",")[1]
-            # print(score)
-            try:
-                db = Database()
-                db.insertEval([self.values.get("user_name"), score])
-                db.closeConnection()
-            except Exception as e: 
-                print(e)
+        #     # print(score)
+        #     try:
+        #         db = Database()
+        #         db.insertEval([self.values.get("user_name"), score])
+        #         db.closeConnection()
+        #     except Exception as e: 
+        #         print(e)
 
         else:
 
