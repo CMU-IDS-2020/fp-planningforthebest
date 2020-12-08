@@ -176,7 +176,7 @@
     var answerContainer = answerContainers[answerContainers.length-1];
     var selector = `textarea[name=feedback]`;
     var previousAnswer = (answerContainer.querySelector(selector) || {}).value;
-    ws = new WebSocket("ws://localhost:80/websocket");
+    ws = new WebSocket("ws://35.194.73.188:80/websocket");
     ws.onopen = function () {
       ws.send("submit,"+previousAnswer);
       ws.onmessage = function (message) {
@@ -270,10 +270,10 @@
   }
 
   function evaluate(){
-    ws = new WebSocket("ws://localhost:80/websocket");
+    ws = new WebSocket("ws://35.194.73.188:80/websocket");
     var answer = document.getElementById('score').value;
     ws.onopen = function () {
-      ws.send("evluate," + answer);
+      ws.send("evaluate," + answer);
     }
     evalButton.style.display = 'none';
   }
@@ -327,7 +327,7 @@
       }
       var nextQuestion = "";
 
-      ws = new WebSocket("ws://localhost:80/websocket");
+      ws = new WebSocket("ws://35.194.73.188:80/websocket");
       ws.onopen = function () {
         ws.send(previousAnswer + "," + (myQuestions.length - 2));
         ws.onmessage = function (message) {

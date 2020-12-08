@@ -63,7 +63,7 @@ class Core():
             except Exception as e: 
                 print(e)
 
-        elif message.split(",")[0] == 'evluate':
+        elif message.split(",")[0] == 'evaluate':
             score = message.split(",")[1]
             # print(score)
             try:
