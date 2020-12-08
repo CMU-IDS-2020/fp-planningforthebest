@@ -26,7 +26,12 @@ create table answers
     q17 VARCHAR(11),
     q18 VARCHAR(11),
     q19 VARCHAR(11),
-    q20 VARCHAR(11)
+    q20 VARCHAR(11),
+    q21 VARCHAR(11),
+    q22 VARCHAR(11),
+    q23 VARCHAR(11),
+    q24 VARCHAR(11),
+    q25 VARCHAR(11)
 );
 
 drop table if exists feature_importances;
