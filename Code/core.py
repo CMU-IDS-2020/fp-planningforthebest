@@ -48,21 +48,30 @@ class Core():
         #print(self.training_data)
         if message.split(",")[0] == 'submit':
             feedback = message[message.index(",")+1:]
-            # importances = RF_plot(self.training_data, self.labels)
             rst = eval(self.learner, self.X_pool)
             self.write_message(rst)
 
 
             #disabling db connection for local testing
-            # db = Database()
-            # db.insertFeatureImportance([self.values.get("user_name")]+list(importances))
-            # db.insertFeedback([self.values.get("user_name"), feedback])
-            # db.insertAnswers([self.values.get("user_name")]+self.answers)
-            # db.closeConnection()
+            # importances = pd.read_csv("static/training20.csv")["Importance"].to_list()
+            # try:
+            #     db = Database()
+            #     db.insertFeatureImportance([self.values.get("user_name")]+list(importances))
+            #     db.insertFeedback([self.values.get("user_name"), feedback])
+            #     db.insertAnswers([self.values.get("user_name")]+self.answers)
+            #     db.closeConnection()
+            # except Exception as e: 
+            #     print(e)
 
         elif message.split(",")[0] == 'evaluate':
             score = message.split(",")[1]
             # print(score)
+            try:
+                db = Database()
+                db.insertEval([self.values.get("user_name"), score])
+                db.closeConnection()
+            except Exception as e: 
+                print(e)
 
         else:
 

@@ -7,26 +7,26 @@ create table answers
 (
     idx int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_name VARCHAR(100),
-    q1 long,
-    q2 long,
-    q3 long,
-    q4 long,
-    q5 long,
-    q6 long,
-    q7 long,
-    q8 long,
-    q9 long,
-    q10 long,
-    q11 long,
-    q12 long,
-    q13 long,
-    q14 long,
-    q15 long,
-    q16 long,
-    q17 long,
-    q18 long,
-    q19 long,
-    q20 long
+    q1 VARCHAR(11),
+    q2 VARCHAR(11),
+    q3 VARCHAR(11),
+    q4 VARCHAR(11),
+    q5 VARCHAR(11),
+    q6 VARCHAR(11),
+    q7 VARCHAR(11),
+    q8 VARCHAR(11),
+    q9 VARCHAR(11),
+    q10 VARCHAR(11),
+    q11 VARCHAR(11),
+    q12 VARCHAR(11),
+    q13 VARCHAR(11),
+    q14 VARCHAR(11),
+    q15 VARCHAR(11),
+    q16 VARCHAR(11),
+    q17 VARCHAR(11),
+    q18 VARCHAR(11),
+    q19 VARCHAR(11),
+    q20 VARCHAR(11)
 );
 
 drop table if exists feature_importances;
@@ -53,3 +53,11 @@ create table feedbacks
 	user_name VARCHAR(100),
 	feedback TEXT
 );
+
+drop table if exists evaluations;
+create table evaluations
+(
+    idx int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_name VARCHAR(100),
+    evaluation int
+)
