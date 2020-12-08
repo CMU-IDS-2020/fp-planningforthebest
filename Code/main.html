@@ -316,7 +316,7 @@
   }
 
   function showNextSlide() {
-    if (myQuestions.length < MAX_QUESTION) {
+    if (myQuestions.length <= MAX_QUESTION) {
       var answerContainers = surveyContainer.querySelectorAll('.answers');
       var answerContainer = answerContainers[myQuestions.length - 2];
       var selector = `input[name=question${myQuestions.length - 2}]:checked`;
