@@ -33,6 +33,7 @@ class Core():
         )
 
         self.values = dict()
+        self.user_name = ""
         self.answers = list()
         self.input_hold = None
         self.Dynamic_question = None
@@ -53,25 +54,25 @@ class Core():
 
 
             #disabling db connection for local testing
-            importances = pd.read_csv("static/training20.csv")["Importance"].to_list()
-            try:
-                db = Database()
-                db.insertFeatureImportance([self.values.get("user_name")]+list(importances))
-                db.insertFeedback([self.values.get("user_name"), feedback])
-                db.insertAnswers([self.values.get("user_name")]+self.answers)
-                db.closeConnection()
-            except Exception as e: 
-                print(e)
+            # importances = pd.read_csv("static/training20.csv")["Importance"].to_list()
+            # try:
+            #     db = Database()
+            #     db.insertFeatureImportance([self.user_name]+list(importances))
+            #     db.insertFeedback([self.user_name, feedback])
+            #     db.insertAnswers([self.user_name]+self.answers)
+            #     db.closeConnection()
+            # except Exception as e: 
+            #     print(e)
 
         elif message.split(",")[0] == 'evaluate':
             score = message.split(",")[1]
             # print(score)
-            try:
-                db = Database()
-                db.insertEval([self.values.get("user_name"), score])
-                db.closeConnection()
-            except Exception as e: 
-                print(e)
+            # try:
+            #     db = Database()
+            #     db.insertEval([self.user_name, score])
+            #     db.closeConnection()
+            # except Exception as e: 
+            #     print(e)
 
         else:
 
@@ -79,7 +80,7 @@ class Core():
 
             if question_idx == "0":
                 #the answer contains name
-                self.values["user_name"] = answer
+                self.user_name = answer
                 self.X_pool = question_generator()
 
                 # cold start, just dummy variable for the baseline

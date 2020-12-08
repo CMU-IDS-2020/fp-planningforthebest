@@ -3,9 +3,9 @@ import os
 
 class Database():
     def __init__(self):
-        host = "35.236.198.39"
-        user = "root"
-        password = "plan2020"
+        host = os.environ['MYSQLHost']
+        user = os.environ['MYSQLName']
+        password = os.environ['MYSQLPwd']
         db_name = "planning"
         self.db = pymysql.connect(
             user=user, 
