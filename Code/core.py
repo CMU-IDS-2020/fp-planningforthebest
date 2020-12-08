@@ -34,7 +34,8 @@ class Core():
 
         self.values = dict()
         self.answers = list()
-        
+        self.input_hold = None
+        self.Dynamic_question = None
 
     def set_websocket(self, websocket):
         self.websocket = websocket
@@ -64,28 +65,6 @@ class Core():
             print(score)
 
         else:
-            if self.start_bool: 
-                query_inst = self.start_hold
-                self.start_bool = False
-            else:
-                self.learner.teach(self.training_data,np.array(self.labels).astype(int))
-
-                #find query idx and instance
-                query_idx, query_inst = self.learner.query(self.X_pool)
-
-                self.start_bool = True
-                self.start_hold = query_inst    
-
-            input_hold = query_inst.reshape(self.training_data[0].shape)
-
-            #convert the feature vectors to matrix, eg [1 1] -> [1 0 ]; [0 1]
-            query_inst = multi_2_one(query_inst)
-
-            #find the questions and get resposne
-            Dynamic_question = tuple([inv_features[str(i)] for i in query_inst])
-            question_hold = askQuestion(Dynamic_question)
-            #add to the trainning data
-            
 
             answer, question_idx = message.split(',')
 
@@ -95,9 +74,9 @@ class Core():
 
             else:
                 #input_hold = self.X_pool[query_idx].reshape(self.training_data[0].shape)
-                print(input_hold)
+                #print(input_hold)
                 #print(self.X_pool[query_idx].reshape())
-                self.training_data=np.append(self.training_data,input_hold,axis =0 )
+                self.training_data=np.append(self.training_data,self.input_hold,axis =0 )
                 print(self.training_data)
                 
                 if answer == "yes":
@@ -108,14 +87,14 @@ class Core():
                 self.labels = np.append(self.labels,int(y_new))
 
                 if y_new == "1":
-                    que,ans = T_Yes(Dynamic_question)
+                    que,ans = T_Yes(self.Dynamic_question)
                     que = npi.difference(que, self.training_data)
                     ans = np.ones((1,que.shape[0]))
                     self.training_data=np.append(self.training_data,que,axis =0 )
                     self.labels = np.append(self.labels,ans)
 
                 if y_new == "0":
-                    que,ans = T_No(Dynamic_question)
+                    que,ans = T_No(self.Dynamic_question)
                     que = npi.difference(que, self.training_data)
                     ans = np.zeros((1,que.shape[0]))
                     self.training_data=np.append(self.training_data,que,axis =0 )
@@ -123,7 +102,7 @@ class Core():
 
                 #Store question string and label
                 
-                self.answers.append(flatten_targets_to_string(query_inst)+y_new)
+                self.answers.append(flatten_targets_to_string(self.query_inst)+y_new)
                 
                 #remove inferible questions
                 self.X_pool = npi.difference(self.X_pool, self.training_data)
@@ -135,6 +114,30 @@ class Core():
                 #print(self.labels)
     
 
+
+
+            if self.start_bool: 
+                self.query_inst = self.start_hold
+                self.start_bool = False
+            else:
+                self.learner.teach(self.training_data,np.array(self.labels).astype(int))
+
+                #find query idx and instance
+                query_idx, self.query_inst = self.learner.query(self.X_pool)
+
+                self.start_bool = True
+                self.start_hold = self.query_inst    
+
+            self.input_hold = self.query_inst.reshape(self.training_data[0].shape)
+
+            #convert the feature vectors to matrix, eg [1 1] -> [1 0 ]; [0 1]
+            self.query_inst = multi_2_one(self.query_inst)
+
+            #find the questions and get resposne
+            self.Dynamic_question = tuple([inv_features[str(i)] for i in self.query_inst])
+            question_hold = askQuestion(self.Dynamic_question)
+
+            #add to the trainning data
             if int(question_idx) > 0:
                 # RF_plot(self.training_data, self.labels, "training" + question_index + ".jpg")
                 RF_Features_Importance(self.training_data, self.labels, "static/training" + question_idx + ".csv")
