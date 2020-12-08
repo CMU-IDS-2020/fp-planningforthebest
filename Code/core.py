@@ -148,7 +148,7 @@ class Core():
             self.learner.teach(self.training_data,np.array(self.labels).astype(int))
 
             #find query idx and instance
-            if self.X_pool.shape[0] > 1:
+            if self.X_pool.shape[0] >= 1:
                 query_idx, self.query_inst = self.learner.query(self.X_pool)  
                 if self.shape_hold == None:
                     self.shape_hold = self.query_inst.shape
