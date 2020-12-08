@@ -24,8 +24,7 @@ class Core():
 
         self.labels = np.array(labels)
         self.training_data = np.concatenate( training, axis=0 )
-        self.start_bool = False 
-        self.start_hold = None 
+
         #learner of active learning
         self.learner = ActiveLearner(
             estimator=RandomForestClassifier(n_estimators= 300),#LogisticRegression(C=1e5, solver='lbfgs'), #LogisticRegression(),
@@ -37,6 +36,7 @@ class Core():
         self.answers = list()
         self.input_hold = None
         self.Dynamic_question = None
+        self.shape_hold = None 
 
     def set_websocket(self, websocket):
         self.websocket = websocket
@@ -49,6 +49,9 @@ class Core():
         #print(self.training_data)
         if message.split(",")[0] == 'submit':
             feedback = message[message.index(",")+1:]
+            if self.X_pool.shape[0] < 10:
+                self.X_pool = question_generator()
+
             rst = eval(self.learner, self.X_pool)
             self.write_message(rst)
 
@@ -108,11 +111,8 @@ class Core():
                 self.Dynamic_question = None
 
             else:
-                #input_hold = self.X_pool[query_idx].reshape(self.training_data[0].shape)
-                #print(input_hold)
-                #print(self.X_pool[query_idx].reshape())
+
                 self.training_data=np.append(self.training_data,self.input_hold,axis =0 )
-                # print(self.training_data)
                 
                 if answer == "yes":
                     y_new  = "1"
@@ -136,34 +136,29 @@ class Core():
                     self.labels = np.append(self.labels,ans)
 
                 #Store question string and label
-                
                 self.answers.append(flatten_targets_to_string(self.query_inst)+y_new)
                 
                 #remove inferible questions
                 self.X_pool = npi.difference(self.X_pool, self.training_data)
 
-                #got the answer move to next question
-                self.start_bool = False
-
-                #print(self.training_data)
-                #print(self.labels)
     
 
 
+            #Teach Model
+            self.learner.teach(self.training_data,np.array(self.labels).astype(int))
 
-            if self.start_bool: 
-                self.query_inst = self.start_hold
-                self.start_bool = False
+            #find query idx and instance
+            if self.X_pool.shape[0] > 1:
+                query_idx, self.query_inst = self.learner.query(self.X_pool)  
+                if self.shape_hold == None:
+                    self.shape_hold = self.query_inst.shape
+
             else:
-                self.learner.teach(self.training_data,np.array(self.labels).astype(int))
+                self.X_pool = question_generator()
+                self.query_inst = np.array(self.training_data[np.random.choice(self.X_pool.shape[0], 1, replace=False)])
 
-                #find query idx and instance
-                query_idx, self.query_inst = self.learner.query(self.X_pool)
-
-                self.start_bool = True
-                self.start_hold = self.query_inst    
-
-            self.input_hold = self.query_inst.reshape(self.training_data[0].shape)
+            #hold question
+            self.input_hold = np.copy(self.query_inst)
 
             #convert the feature vectors to matrix, eg [1 1] -> [1 0 ]; [0 1]
             self.query_inst = multi_2_one(self.query_inst)
