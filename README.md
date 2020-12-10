@@ -10,7 +10,7 @@
 * **Video**: [Video here](https://drive.google.com/file/d/1l9Qugbhf7rf-qixktgJlR45moHKSS8xy/view?usp=sharing/)
 * **Report**: [Report md file](https://github.com/CMU-IDS-2020/fp-planningforthebest/blob/main/Report.md)
 
-<img src="Submission.gif" width="40" height="40" />
+<img src="Submission.gif" width="400" height="400" />
 
 ## Work distribution
 
