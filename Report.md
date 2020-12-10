@@ -40,7 +40,7 @@ Our front-end is a web application built with JavaScript, HTML, and CSS. The vis
 **Database and server**
 MySQL is used to store unique patient answers to each of the dynamically-chosen questions. The answers are stored for patients to reference at any point. Collected answers are also aggregated to make predictions of patient decisions, using methods such as matrix factorization. On MySQL database, 4 tables are created to store each user’s data (see appendix for schema). All parts of our application are deployed on a GCP server with a public address, which means any user can access the survey simply through a browser without any other requirements.
 
-<img src="architecture.JPG" width="600px" />
+<img src="architecture.JPG" width="500px" />
 Fig 2: Diagram of full-stack application functions architecture
 
 ## Results
@@ -52,6 +52,7 @@ Gaining patient trust is a key part of the model evaluation. After showing 10 pr
 
 <img src="Evaluation_plot.png" width="420px" />
 Fig 2: Accuracy of model predictions reported by users
+
 
 **Feedback for application**
 Another critical component to evaluating the success of this application is whether it provides a better experience for patients than manually filling out an ACP. At the end of the survey experience, we ask patients to provide text feedback to gather their thoughts. 
@@ -74,18 +75,20 @@ The model is currently only trained and evaluated with data we collected from 17
 
 ## Appendix
 **Database schema**
+
 <img src="database_schema.PNG" width="600px" />
 
 **Features**
+
 Features:
-                "One sided body paralysis ",
-                "Impaired voice, unable to speak coherent words ",
-                "Impaired eating requiring use of a feeding tube ",
-                "Imparied vision ",
-            "Impaired cognitive ability such as severe memory loss, difficulty expressing yourself,   difficulty reasoning ",
-                "Impaired perception and orientation to surroundings ",
-                "Impaired self-care ability, e.g. difficulty dressing yourself " ,
-                "Incontinence " ,
-                "Impaired control of emotions ",
-                "Impaired sexual ability "
+"One sided body paralysis ",
+"Impaired voice, unable to speak coherent words ",
+"Impaired eating requiring use of a feeding tube ",
+"Imparied vision ",
+"Impaired cognitive ability such as severe memory loss, difficulty expressing yourself,   difficulty reasoning ",
+"Impaired perception and orientation to surroundings ",
+"Impaired self-care ability, e.g. difficulty dressing yourself " ,
+"Incontinence " ,
+"Impaired control of emotions ",
+"Impaired sexual ability "
 
