@@ -2,7 +2,7 @@
 * **Title**: Planning for fatal times
 * **Online URL**: http://35.194.73.188/ 
 
-Warning: Our deployment may not be able to handle multiple requests at once. Another user's input may affect the other's experience. To run the service locally to ensure undisturbed environment, please run "python init.py" under the directory Code.
+Warning: Our deployment may not be able to handle multiple requests at once. Another user's input may affect the other's experience. To run the service locally to ensure undisturbed environment, please run "python init.py" under the directory Code, after running "pip install -r requirements.txt" from root.
 * **Team members**:
   * Contact person: eileenwa@andrew.cmu.edu
   * weiqinw@andrew.cmu.edu
