@@ -9,7 +9,7 @@ features = {
 "One sided body paralysis " : np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0]), # partial body paralysis
 "Impaired voice, unable to speak coherent words " : np.array([0, 1, 0, 0, 0, 0, 0, 0, 0, 0]),
 "Impaired eating requiring use of a feeding tube " : np.array([0, 0, 1, 0, 0, 0, 0, 0, 0, 0]),
-"Imparied vision " : np.array([0, 0, 0, 1, 0, 0, 0, 0, 0, 0]),
+"Impaired vision " : np.array([0, 0, 0, 1, 0, 0, 0, 0, 0, 0]),
 "Impaired cognitive ability such as severe memory loss, difficulty expressing yourself, difficulty reasoning " : np.array([0, 0, 0, 0, 1, 0, 0, 0, 0, 0]),
 "Impaired perception and orientation to surroundings " : np.array([0, 0, 0, 0, 0, 1, 0, 0, 0, 0]),
 "Impaired self-care ability, e.g. difficulty dressing yourself " : np.array([0, 0, 0, 0, 0, 0, 1, 0, 0, 0]),
@@ -21,7 +21,7 @@ columns =[
                 "One sided body paralysis ",
                 "Impaired voice, unable to speak coherent words ",
                 "Impaired eating requiring use of a feeding tube ",
-                "Imparied vision ",
+                "Impaired vision ",
                 "Impaired cognitive ability such as severe memory loss, difficulty expressing yourself, difficulty reasoning ",
                 "Impaired perception and orientation to surroundings ",
                 "Impaired self-care ability, e.g. difficulty dressing yourself " ,
