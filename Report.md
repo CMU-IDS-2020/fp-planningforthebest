@@ -42,6 +42,12 @@ MySQL is used to store unique patient answers to each of the dynamically-chosen 
 ![architecture.JPG](architecture.JPG) 
 
 ## Results
+**Patient workflow in web application**
+In the web application, patients will first answer 25 questions with binary features. Patient selects “agree” or “disagree”, and clicks “Next question” to record their preference. Along with each subsequent question, a bar chart will visualize how the model is currently accounting for each feature’s importance. As the patient answers more questions, the importance score will change in real-time. The answers to the 25 dynamically chosen questions are used to train the model. Next, 10 questions are presented in one screen with the machine’s predicted preferences for the patient. Patient is asked to evaluate whether the predicted preferences accurately reflect their needs. There is also a text feedback box for the patient to provide any additional comments about the application experience. 
+
+**Patient evaluation of model**  
+Gaining patient trust is a key part of the model evaluation. After showing 10 predicted preferences, we ask the patient how many of the predicted preferences they agree with. The intention is to ensure our model is outputting predicted preferences that are aligned with what patients would want. Our model has been evaluated by 17 different users. The distribution of the scores show that the model is making successful attempts at predicting the user’s preference, with mean value of 7.82 and standard deviation of 1.28.
+<img src="Evaluation_plot.PNG"width="420px"/>
 
 ## Discussion
 The initial goal for this application is to encourage patients to plan ahead on critical life decisions. We set out to ease their anxiety by developing a solution that simplifies the documentation process, minimize ambiguity around patient intent, and present informed guidance for proxy decision makers. In many ACP products in the market, patients need to have multiple conversations and repetitively enforce their intentions across different stakeholders— medical professionals, patients’ family members, and lawyers, to name a few. From a functional perspective, our web application efficiently enables patients to accurately document their intent in a straightforward manner, especially given complicated health circumstances. 
