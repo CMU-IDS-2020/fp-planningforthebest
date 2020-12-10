@@ -41,7 +41,7 @@ Our front-end is a web application built with JavaScript, HTML, and CSS. The vis
 MySQL is used to store unique patient answers to each of the dynamically-chosen questions. The answers are stored for patients to reference at any point. Collected answers are also aggregated to make predictions of patient decisions, using methods such as matrix factorization. On MySQL database, 4 tables are created to store each user’s data (see appendix for schema). All parts of our application are deployed on a GCP server with a public address, which means any user can access the survey simply through a browser without any other requirements.
 
 <img src="architecture.JPG" width="500px" />
-Fig 2: Diagram of full-stack application functions architecture
+Fig 1: Diagram of full-stack application functions architecture
 
 ## Results
 **Patient workflow in web application**
