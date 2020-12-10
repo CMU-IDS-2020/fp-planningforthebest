@@ -1,4 +1,4 @@
-# Final Project Report
+# Planning for fatal times - Final Report
 
 **Project URL**: http://35.194.73.188/
 
@@ -48,7 +48,7 @@ In the web application, patients will first answer 25 questions with binary feat
 **Patient evaluation of model**  
 Gaining patient trust is a key part of the model evaluation. After showing 10 predicted preferences, we ask the patient how many of the predicted preferences they agree with. The intention is to ensure our model is outputting predicted preferences that are aligned with what patients would want. Our model has been evaluated by 17 different users. The distribution of the scores show that the model is making successful attempts at predicting the user’s preference, with mean value of 7.82 and standard deviation of 1.28.
 
-<img src="Evaluation_plot.PNG" width="420px" />
+<img src="Evaluation_plot.png" width="420px" />
 
 **Feedback for application**
 Another critical component to evaluating the success of this application is whether it provides a better experience for patients than manually filling out an ACP. At the end of the survey experience, we ask patients to provide text feedback to gather their thoughts. 
