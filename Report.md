@@ -1,5 +1,6 @@
 # Planning for fatal times - Final Report
 **By: Seungmyung Lee, Yifan Song, Eileen Wang, Weiqin Wang**
+
 **Project URL**: http://35.194.73.188/
 
 Healthcare patients sometimes need to make critical life decisions in moments where they are cognitively unavailable to do so. This is why the Advance Care Planning (ACP) is created: It is a tool to document ahead of time patient preferences in whether to receive life-sustaining treatments or not in various scenarios. However, the current experience of filling out an ACP is manual and difficult to digest for the patient. The ACP also may not address comprehensive scenarios for whether to receive life-sustaining treatments or not. The goal of our project is to address these limitations, by building a user-friendly survey experience that leverages active learning and generates accurate predictions of patient preferences in different scenarios. We aim to alleviate the stress in filling out an ACP, while helping patients run through as many scenarios as possible with the help of machine learning. 
