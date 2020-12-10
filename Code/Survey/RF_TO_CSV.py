@@ -1,12 +1,6 @@
 import pandas as pd
 from sklearn.ensemble.forest import RandomForestClassifier
-from sklearn.feature_selection import SelectFromModel
-from sklearn.model_selection import train_test_split
 import numpy as np
-from sklearn.datasets import make_classification
-from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
 
 features = {
 "0":"Paralysis ", # partial body paralysis
