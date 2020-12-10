@@ -10,7 +10,7 @@
 
 ## Work distribution
 
-Eileen led report writing, narrative-forming, and contributed to design of front-end application. Weiqin led model-building, and contributed to back-end ML integration. Yifan led front-end development, as well as architecture and UI/UX design. Seungmyung led database integration and back-end interactions with application. 
+Eileen led report writing, narrative-forming, and contributed to design of front-end application. Weiqin led model-building, and contributed to back-end question sampling, ML training and eval integration. Yifan led front-end development, as well as architecture and UI/UX design. Seungmyung led database integration and back-end interactions with application. 
 
 ## Deliverables
 
