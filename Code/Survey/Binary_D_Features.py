@@ -84,8 +84,8 @@ def askQuestion(nodes_list):
     :return: the value (1 for yes, 0 for no)
     """
 
-    out_str_begin = "Suppose that if you regained consciousness, you would have -  "
-    out_str_end = " *Would you want to receive life-sustaining care?"
+    out_str_begin = "Suppose that if you regained consciousness, you would have ALL below -  "
+    out_str_end = " *Would you still want to receive life-sustaining care?"
 
     # Add nodes to ask about.
     for i in range(len(nodes_list)):

@@ -90,6 +90,10 @@
       height: 420px;
       margin-top: 30px;
     }
+    /*end{*/
+    /*  position:absolute;*/
+    /*  bottom: 10px;*/
+    /*}*/
 </style>
 
 
@@ -102,6 +106,7 @@
 <button id="submit">Submit</button>
 <div id="results"></div>
 <div id="caption" style="display: none"><p style="font-size: 18px">This graph shows the importance of different factors that go into predicting your needs.</p></div>
+<!--<div id="end" style="display: none"><p style="font-size: 20px">Thanks for completing the survey!</p></div>-->
 
 <!-- Load d3.js -->
 <script src="https://d3js.org/d3.v4.js"></script>
@@ -184,7 +189,8 @@
     var answerContainer = answerContainers[answerContainers.length-1];
     var selector = `textarea[name=feedback]`;
     var previousAnswer = (answerContainer.querySelector(selector) || {}).value;
-    ws = new WebSocket("ws://35.194.73.188:80/websocket");
+    ws = new WebSocket("ws://localhost:80/websocket");
+    // ws = new WebSocket("ws://35.194.73.188:80/websocket");
     ws.onopen = function () {
       ws.send("submit,"+previousAnswer);
       ws.onmessage = function (message) {
@@ -236,6 +242,15 @@
                       );
                     }
                     // add this question and its answers to the output
+                    var question_arr = currentQuestion.question.split('*');
+                    var question_html = question_arr[0] + "\n";
+                    var i = 1;
+                    while(i < question_arr.length-1){
+                      question_html  += "<li>" + question_arr[i] + "</li>";
+                      i++;
+                    }
+                    question_html += "\n" + question_arr[question_arr.length-1];
+
                     output.push(
                             `<div class="slide"><div class ="progress"><b>Question ` + questionNumber + `out of 25` +
                   `</b></div><div class="question"> ${question_html} </div><div class="answers"> ${answers.join("")} </div>
@@ -286,6 +301,7 @@
       ws.send("evaluate," + answer);
     }
     evalButton.style.display = 'none';
+    // end.style.display = 'inline-block';
   }
 
   function showSlide(n) {
@@ -301,6 +317,7 @@
       startButton.style.display = 'none';
     }
     if(currentSlide === slides.length-1){
+      caption.style.display = 'none';
       nextButton.style.display = 'none';
       submitButton.style.display = 'inline-block';
     }
@@ -365,13 +382,14 @@
     } else {
 
       showSlide(currentSlide + 1);
-      if(currentSlide <= MAX_QUESTION){
+      if(currentSlide < MAX_QUESTION){
         // Initialize plot
         var questionIdx = currentSlide - 1;
         // console.log(questionIdx);
         generate_graph('static/training' + (questionIdx-1) + '.csv');
       } else {
         resultsContainer.style.display = 'none';
+        caption.style.display = 'none';
       }
     }
   }
@@ -382,7 +400,8 @@
   const resultsContainer = document.getElementById('results');
   const submitButton = document.getElementById('submit');
   const startButton = document.getElementById('start');
-  const caption = document.getElementById('caption')
+  const caption = document.getElementById('caption');
+  // const end = document.getElementById('end');
   let prediction_slide = false;
   const MAX_QUESTION = 27;
   // Initialize with at least two questions to make the logic work
