@@ -21,6 +21,10 @@
       font-size: 20px;
       margin-bottom: 10px;
     }
+    .progress{
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
     .question{
       position: relative;
       left: 30%;
@@ -38,7 +42,7 @@
       margin-bottom: 10px;
     }
     .prediction{
-      font-size: 16px;
+      font-size: 15px;
       text-align: left;
     }
     .answers {
@@ -83,9 +87,13 @@
     }
     .survey-container{
       position: relative;
-      height: 350px;
-      margin-top: 40px;
+      height: 420px;
+      margin-top: 30px;
     }
+    /*end{*/
+    /*  position:absolute;*/
+    /*  bottom: 10px;*/
+    /*}*/
 </style>
 
 
@@ -97,6 +105,8 @@
 <button id="next">Next</button>
 <button id="submit">Submit</button>
 <div id="results"></div>
+<div id="caption" style="display: none"><p style="font-size: 18px">This graph shows the importance of different factors that go into predicting your needs.</p></div>
+<!--<div id="end" style="display: none"><p style="font-size: 20px">Thanks for completing the survey!</p></div>-->
 
 <!-- Load d3.js -->
 <script src="https://d3js.org/d3.v4.js"></script>
@@ -111,7 +121,7 @@
             'The following survey is created to help you proactively plan for any challenging health circumstances you may encounter as a patient. ' +
             'Our goal is to accurately represent patient’s wishes in moments where they are unable to make conscious decisions themselves, ' +
             'in the form of a written description for family and medical professionals. ' +
-            'Please answer the following 20 questions to reflect your preferences. ' +
+            'Please answer the following 25 questions to reflect your preferences. ' +
             'Then, we will show you an 10 additional questions with machine-predicted answers. ' +
             'These predicted answers are based on your recorded prior preferences. ' +
             'Let us know whether you agree with the predicted answers in the end, as it can help us refine the accuracy of our algorithms behind this ACP.' +
@@ -160,7 +170,8 @@
           }
           question_html += "\n" + question_arr[question_arr.length-1];
           output.push(
-            `<div class="slide"><div class="question"> ${question_html} </div><div class="answers"> ${answers.join("")} </div>
+            `<div class="slide"><div class ="progress"><b>Question ` + questionNumber + ` out of 25` +
+                  `</b></div><div class="question"> ${question_html} </div><div class="answers"> ${answers.join("")} </div>
              <div class="graph"></div></div>`
           );
 
@@ -173,11 +184,13 @@
   }
 
   function showResults(){
+    caption.style.display = 'none';
     var answerContainers = surveyContainer.querySelectorAll('.answers');
     var answerContainer = answerContainers[answerContainers.length-1];
     var selector = `textarea[name=feedback]`;
     var previousAnswer = (answerContainer.querySelector(selector) || {}).value;
-    ws = new WebSocket("ws://35.194.73.188:80/websocket");
+    ws = new WebSocket("ws://localhost:80/websocket");
+    // ws = new WebSocket("ws://35.194.73.188:80/websocket");
     ws.onopen = function () {
       ws.send("submit,"+previousAnswer);
       ws.onmessage = function (message) {
@@ -229,8 +242,19 @@
                       );
                     }
                     // add this question and its answers to the output
+                    var question_arr = currentQuestion.question.split('*');
+                    var question_html = question_arr[0] + "\n";
+                    var i = 1;
+                    while(i < question_arr.length-1){
+                      question_html  += "<li>" + question_arr[i] + "</li>";
+                      i++;
+                    }
+                    question_html += "\n" + question_arr[question_arr.length-1];
+
                     output.push(
-                            `<div class="slide"><div class="question"> ${currentQuestion.question} </div><div class="answers"> ${answers.join("")} </div></div>`
+                            `<div class="slide"><div class ="progress"><b>Question ` + questionNumber + `out of 25` +
+                  `</b></div><div class="question"> ${question_html} </div><div class="answers"> ${answers.join("")} </div>
+             <div class="graph"></div></div>`
                     );
                   }
                 }
@@ -277,6 +301,7 @@
       ws.send("evaluate," + answer);
     }
     evalButton.style.display = 'none';
+    // end.style.display = 'inline-block';
   }
 
   function showSlide(n) {
@@ -292,6 +317,7 @@
       startButton.style.display = 'none';
     }
     if(currentSlide === slides.length-1){
+      caption.style.display = 'none';
       nextButton.style.display = 'none';
       submitButton.style.display = 'inline-block';
     }
@@ -317,7 +343,7 @@
   }
 
   function showNextSlide() {
-    if (myQuestions.length <= MAX_QUESTION) {
+    if (myQuestions.length < MAX_QUESTION) {
       var answerContainers = surveyContainer.querySelectorAll('.answers');
       var answerContainer = answerContainers[myQuestions.length - 2];
       var selector = `input[name=question${myQuestions.length - 2}]:checked`;
@@ -363,6 +389,7 @@
         generate_graph('static/training' + (questionIdx-1) + '.csv');
       } else {
         resultsContainer.style.display = 'none';
+        caption.style.display = 'none';
       }
     }
   }
@@ -373,6 +400,8 @@
   const resultsContainer = document.getElementById('results');
   const submitButton = document.getElementById('submit');
   const startButton = document.getElementById('start');
+  const caption = document.getElementById('caption');
+  // const end = document.getElementById('end');
   let prediction_slide = false;
   const MAX_QUESTION = 27;
   // Initialize with at least two questions to make the logic work
@@ -460,6 +489,7 @@ function generate_graph(filename) {
         .attr("height", function(d) { return height - y(d['Importance']); })
         .attr("fill", "#69b3a2")
   })
+  caption.style.display = 'inline-block';
 }
 
 
