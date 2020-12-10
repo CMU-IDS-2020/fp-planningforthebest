@@ -1,4 +1,4 @@
-#This script was developed by CAAR REU 2019 DICKERSON'S GROUP
+#Part of this script was developed during CAAR REU 2019.
 #file to check the rationality 
 
 import numpy as np
@@ -62,13 +62,6 @@ def question_generator():
     
     """
 
-    #all possible questions that could be asked, approximately balanced in number between 2 and 3 combos
-    #two_questions = list(combinations(features.keys(), 2))
-    #three_questions = list(combinations(features.keys(), 3))
-    #reverse map of the dictionary 
-
-
-    #questions to be pooled 
     X_pool = []
 
     for question in all_q:
@@ -92,8 +85,6 @@ def askQuestion(nodes_list):
         out_str_begin = out_str_begin + "*" + nodes_list[i][0] + nodes_list[i][1:] + "; "
 
 
-    # Formatting- make sure we end with a .
-    # out_str_begin = out_str_begin[:-1] + '. '
     
     out_str_begin = out_str_begin + out_str_end 
 
