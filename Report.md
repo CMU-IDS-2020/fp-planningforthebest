@@ -39,7 +39,9 @@ Our front-end is a web application built with JavaScript, HTML, and CSS. The vis
 
 **Database and server**
 MySQL is used to store unique patient answers to each of the dynamically-chosen questions. The answers are stored for patients to reference at any point. Collected answers are also aggregated to make predictions of patient decisions, using methods such as matrix factorization. On MySQL database, 4 tables are created to store each user’s data (see appendix for schema). All parts of our application are deployed on a GCP server with a public address, which means any user can access the survey simply through a browser without any other requirements.
-![architecture.JPG](architecture.JPG) 
+
+<img src="architecture.JPG" width="600px" />
+Fig 2: Diagram of full-stack application functions architecture
 
 ## Results
 **Patient workflow in web application**
@@ -49,6 +51,7 @@ In the web application, patients will first answer 25 questions with binary feat
 Gaining patient trust is a key part of the model evaluation. After showing 10 predicted preferences, we ask the patient how many of the predicted preferences they agree with. The intention is to ensure our model is outputting predicted preferences that are aligned with what patients would want. Our model has been evaluated by 17 different users. The distribution of the scores show that the model is making successful attempts at predicting the user’s preference, with mean value of 7.82 and standard deviation of 1.28.
 
 <img src="Evaluation_plot.png" width="420px" />
+Fig 2: Accuracy of model predictions reported by users
 
 **Feedback for application**
 Another critical component to evaluating the success of this application is whether it provides a better experience for patients than manually filling out an ACP. At the end of the survey experience, we ask patients to provide text feedback to gather their thoughts. 
@@ -68,4 +71,21 @@ Currently there are only 10 features used by the model and are shown to patients
 
 **Improve model performance by collecting more data**
 The model is currently only trained and evaluated with data we collected from 17 users. Once we have more data, methods such as collaborative filtering can be used to better predict user intents of patients with similar utility functions. However, such methods also incur potential ethical concerns such as mis-represent minority groups.
+
+## Appendix
+**Database schema**
+<img src="database_schema.PNG" width="600px" />
+
+**Features**
+Features:
+                "One sided body paralysis ",
+                "Impaired voice, unable to speak coherent words ",
+                "Impaired eating requiring use of a feeding tube ",
+                "Imparied vision ",
+            "Impaired cognitive ability such as severe memory loss, difficulty expressing yourself,   difficulty reasoning ",
+                "Impaired perception and orientation to surroundings ",
+                "Impaired self-care ability, e.g. difficulty dressing yourself " ,
+                "Incontinence " ,
+                "Impaired control of emotions ",
+                "Impaired sexual ability "
 
