@@ -9,9 +9,9 @@
 * **Track**: Model
 * **Video**: [Video here](https://drive.google.com/file/d/1l9Qugbhf7rf-qixktgJlR45moHKSS8xy/view?usp=sharing/)
 * **Report**: [Report md file](https://github.com/CMU-IDS-2020/fp-planningforthebest/blob/main/Report.md)
-
+<p align="center">
 <img src="Submission.gif" width="600" height="400" />
-
+</p>
 ## Work distribution
 
 Eileen led report writing, narrative-forming, and contributed to design of front-end application. Weiqin led model-building, proposed visulization choices, and contributed to back-end system integration with ML. Yifan led front-end development, as well as architecture and UI/UX design. Seungmyung led database integration and back-end interactions with application. 
