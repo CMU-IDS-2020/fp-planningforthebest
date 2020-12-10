@@ -47,7 +47,7 @@ In the web application, patients will first answer 25 questions with binary feat
 
 **Patient evaluation of model**  
 Gaining patient trust is a key part of the model evaluation. After showing 10 predicted preferences, we ask the patient how many of the predicted preferences they agree with. The intention is to ensure our model is outputting predicted preferences that are aligned with what patients would want. Our model has been evaluated by 17 different users. The distribution of the scores show that the model is making successful attempts at predicting the user’s preference, with mean value of 7.82 and standard deviation of 1.28.
-<img src="Evaluation_plot.PNG"width="420px"/>
+<img src="Evaluation_plot.PNG" width="420px" />
 
 ## Discussion
 The initial goal for this application is to encourage patients to plan ahead on critical life decisions. We set out to ease their anxiety by developing a solution that simplifies the documentation process, minimize ambiguity around patient intent, and present informed guidance for proxy decision makers. In many ACP products in the market, patients need to have multiple conversations and repetitively enforce their intentions across different stakeholders— medical professionals, patients’ family members, and lawyers, to name a few. From a functional perspective, our web application efficiently enables patients to accurately document their intent in a straightforward manner, especially given complicated health circumstances. 
