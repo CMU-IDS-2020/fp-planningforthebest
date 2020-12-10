@@ -1,6 +1,8 @@
 # CMU Interactive Data Science Final Project:
 * **Title**: Planning for fatal times
 * **Online URL**: http://35.194.73.188/ 
+
+Warning: Our deployment may not be able to handle multiple requests at once. Another user's input may affect the other's experience. To run the service locally to ensure undisturbed environment, please run "python init.py" under the directory Code, after running "pip install -r requirements.txt" from root.
 * **Team members**:
   * Contact person: eileenwa@andrew.cmu.edu
   * weiqinw@andrew.cmu.edu
@@ -9,8 +11,9 @@
 * **Track**: Model
 * **Video**: [Video here](https://drive.google.com/file/d/1l9Qugbhf7rf-qixktgJlR45moHKSS8xy/view?usp=sharing/)
 * **Report**: [Report md file](https://github.com/CMU-IDS-2020/fp-planningforthebest/blob/main/Report.md)
-
+<p align="center">
 <img src="Submission.gif" width="600" height="400" />
+</p>
 
 ## Work distribution
 
